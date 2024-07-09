@@ -1,0 +1,80 @@
+{% extends 'modelo.html' %}
+{% load static %}
+
+{% block titulo %}
+    <title> consultas </title>
+{% endblock %}
+
+{% block conteudo %}
+    <div class="container">
+        <h3> consultas agendadas </h3>
+        <hr>
+        <div class="table-responsive">
+            <form action="?" method="GET">
+                <input type="text" name="nome" class="p-1 border" value="{{ request.GET.nome }}">
+                <button type="submit" class="btn btn-success">Buscar</button>
+                <a href="{% url 'Listar-cronograma' %}">Limpar</a>
+                <a href="?page={{...}} ,&nome={{request.GET.nome}}"> </a>
+            </form>    
+        </hr>
+            <table class="table table-striped">
+                <tr>
+                    <th>Paciente</th>
+                    <th>data</th>
+                    <th>medico</th>
+                    <th>hospital</th>
+                    <th>horario</th>
+                    <th>opções</th>
+                    <th>status</th>
+                    {% for group in request.user.groups.all %}
+                     {% if group.name == 'Medico' or group.name == 'Admin' %}
+                     <th>a ceita ou rejeitar consulta</th>
+                     {% endif %}
+                    {% endfor %}
+                </tr>
+                
+        {% for consulta in object_list|dictsort:"data" %}
+                <tr data-consulta-id="{{consulta.pk}}">
+                    <td>{{ consulta.paciente }}</td>
+                    <td>{{ consulta.data }}</td>
+                    <td>{{ consulta.medico }}</td>
+                    <td>{{ consulta.hospital }}</td>
+                    <td>{{ consulta.horario }}</td>
+                    <td>
+                            <a href="{% url 'editar-consulta' consulta.pk %}" class="btn btn-warning btn-sm" title="Editar">Editar</a> 
+                            <a href="{% url 'excluir-consulta' consulta.pk %}" class="btn btn-danger btn-sm" title="Excluir">Excluir</a>
+                    </td>
+                    <td>{{ consulta.status }}</td>
+                    <td>
+                        {% for group in request.user.groups.all %}
+                            {% if group.name == 'Medico' or group.name == 'Admin' %}
+                                <a href="{% url 'editar-consulta2' consulta.pk %}" class="btn btn-primary btn-sm" title="Editar"> altera status </a> 
+                            {% endif %}
+                        {% endfor %}
+                        {% empty %}
+                    </td>
+                    
+                </tr>
+            <tr>
+             <td colspan="3">Nenhuma consulta confirmada agendada.</td>
+          </tr>
+       {% endfor %}
+            </table>
+
+            <div class="text-center">
+                {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}">Voltar</a>
+                {% endif %}
+
+                <span>Página: {{ page_obj.number }}</span>
+
+                {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">Próxima</a>
+                {% endif %}
+            </div>
+            <a  href="{% url 'cadastrar-consulta' %}"><button class="btn btn-primary btn-sm" >cadastra nova consulta </button></a> 
+        </div>
+    </div>
+          
+{% endblock %}
+  

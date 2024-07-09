@@ -1,0 +1,53 @@
+{% extends 'modelo.html' %}
+{% load static %}
+
+{% block titulo %}
+    <title> consultas </title>
+{% endblock %}
+
+{% block conteudo %}
+    <div class="container">
+        <h3> comentarios e avaliações</h3>
+        <hr>
+        <div class="table-responsive">
+            <form action="?" method="GET">
+                <input type="text" name="nome" class="p-1 border" value="{{ request.GET.nome }}">
+                <button type="submit" class="btn btn-success">Buscar</button>
+                <a href="{% url 'Listar-cronograma' %}">Limpar</a>
+                <a href="?page={{...}} ,&nome={{request.GET.nome}}"> </a>
+            </form>    
+        </hr>
+          <table class="table table-striped">
+                <tr>
+                    <th>comentario</th>
+                    <th>nota</th>
+                   
+                </tr>
+               {% for comentario in object_list %}
+                    <tr>
+                        <td>{{ comentario.sugestoes }}</td>
+                        <td>{{ comentario.nota }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                    <td colspan="3">Nenhuma consulta confirmada agendada.</td>
+                    </tr>
+               {% endfor %}
+          </table>
+
+            <div class="text-center">
+                {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}">Voltar</a>
+                {% endif %}
+
+                <span>Página: {{ page_obj.number }}</span>
+
+                {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">Próxima</a>
+                {% endif %}
+            </div>
+            <a  href="{% url 'cadastrar-comentario' %}"><button class="btn btn-primary btn-sm" > fazer nova avaliação </button></a> 
+        </div>
+    </div>      
+{% endblock %}
+  

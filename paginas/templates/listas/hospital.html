@@ -1,0 +1,65 @@
+{% extends 'modelo.html' %}
+{% load static %}
+
+{% block titulo %}
+    <title> hospitais </title>
+{% endblock %}
+
+{% block conteudo %}
+    <div class="container">
+        <h3> Lista de hospitais </h3>
+        
+        <hr>
+
+        <div class="table-responsive">
+            <form action="?" method="GET">
+                <input type="text" name="nome" class="p-1 border" value="{{ request.GET.nome }}">
+                <button type="submit" class="btn btn-success">Buscar</button>
+                <a href="{% url 'listar-hospital' %}">Limpar</a>
+            </form>
+
+            <hr>
+
+            <table class="table table-striped">
+                <tr>
+                    <th>Nome</th>
+                    <th>descrição  </th>
+                    <th>Opções</th>
+                </tr>
+
+                {% for hospital in object_list %}
+                <tr>
+                    <td>{{ hospital.nome }}</td>
+                    <td>{{ hospital.descricao}}</td>
+                    <td>
+                        <a href="{% url 'editar-hospital' hospital.pk %}" class="btn btn-warning btn-sm" title="Editar">Editar</a>
+                        <a href="{% url 'excluir-hospital' hospital.pk %}" class="btn btn-danger btn-sm" title="Excluir">Execluir</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="3">Nenhuma hospital registrado .</td>
+                </tr>
+                {% endfor %}
+            </table>
+
+            <div class="text-center">
+                <a href="?page=1">Primeira</a>
+
+                {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}"> Voltar </a>
+                {% endif %}
+
+                <span>Página: {{ page_obj.number }}</span>
+
+                {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}"> Próxima </a>
+                {% endif %}
+
+                <a href="?page={{ page_obj.paginator.num_pages }}">Última</a>
+            </div>
+            <a  href="{% url 'cadastrar-hospital' %}"><button class="btn btn-primary btn-sm" >cadastra novo hospital</button></a> 
+           
+        </div>
+    </div>
+{% endblock %}
