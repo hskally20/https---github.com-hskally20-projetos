@@ -9,7 +9,8 @@ from django.http import HttpResponse
 from django.contrib.auth import logout
 from django.shortcuts import redirect 
 def logout_view(request): 
-    logout(request) 
+    auth.logout(request) 
+    return redirect('')
 
 class home(View):
     def get(self, request):

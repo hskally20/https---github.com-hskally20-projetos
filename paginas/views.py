@@ -6,5 +6,5 @@ class IndexView(TemplateView):
     template_name = "index.html"
 
 class SugestoesView(TemplateView):
-    template_name = "sugestoes.php"
+    template_name = "sugestoes.html"
    
