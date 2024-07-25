@@ -1,0 +1,34 @@
+body {
+font-family: 'Times New Roman', Times, serif;
+background-color: aliceblue;
+}
+row {
+    display:flex;
+    align-items: center;
+    justify-content: center;
+}
+card {
+    border: 5px;
+    box-shadow: 7px 7px 13px 0 rgb(50, 50, 0.22);
+    padding: 20px;
+    margin: 20px;
+    width: 40px;
+    transition: all 0.3 ease-out;
+
+}
+.card:hover {
+transform: translateY(.5px);
+cursor: pointer;
+}
+.card p{
+    color: aliceblue;
+    font-size: 16px;
+}
+.image {
+    float: right;
+    max-width: 64;
+    max-height: 64;
+}
+.gree {
+    border-left: 3px solid #3bb54a;
+}
