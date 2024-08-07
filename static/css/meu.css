@@ -1,34 +1,74 @@
 body {
-font-family: 'Times New Roman', Times, serif;
-background-color: aliceblue;
+    font-family: 'Times New Roman', Times, serif;
+    background: linear-gradient(to bottom, #ffffff, #a0c6e5); /* Gradiente de branco para azul claro */
+    margin: 0;
+    padding: 0;
 }
-row {
-    display:flex;
+
+.container {
+    margin-top: 20px;
+    padding: 20px;
+}
+
+.carousel-section {
+    background: #ffffff;
+    padding: 20px 0;
+}
+
+.card-section {
+    background: #f0f8ff; /* Azul muito claro para a seção dos cards */
+    padding: 20px 0;
+}
+
+.row {
+    display: flex;
     align-items: center;
     justify-content: center;
 }
-card {
-    border: 5px;
+
+.card {
+    border: 5px solid #ddd;
     box-shadow: 7px 7px 13px 0 rgb(50, 50, 0.22);
     padding: 20px;
-    margin: 20px;
-    width: 40px;
-    transition: all 0.3 ease-out;
+    margin: 10px;
+    width: 250px;
+    transition: all 0.3s ease-out;
+    text-align: center;
+    height: 200px;
+}
 
+
+.card {
+    border: 1px solid #ccc; /* Borda sutil aos cards */
+    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.2); /* Sombra leve */
+    padding: 15px; /* Padding para mais espaço interno */
+    margin: 15px; /* Margem para espaçamento externo */
+    width: 200px; /* Largura maior para formato retangular */
+    height: 120px; /* Altura reduzida para formato retangular */
+    transition: all 0.3s ease; /* Transição suave para efeitos de hover */
+    display: flex; /* Flexbox para centralizar o conteúdo */
+    flex-direction: column; /* Alinha o conteúdo em coluna */
+    justify-content: center; /* Centraliza verticalmente o conteúdo */
+    align-items: center; /* Centraliza horizontalmente o conteúdo */
+    text-align: center; /* Centraliza o texto */
 }
+
+.card h2 {
+    margin: 10px 0; /* Margem para o título */
+    font-size: 18px; /* Tamanho da fonte do título */
+}
+
+.card a {
+    color: #0000ff; /* Cor do link */
+    text-decoration: none; /* Remove o sublinhado */
+}
+
 .card:hover {
-transform: translateY(.5px);
-cursor: pointer;
+    transform: translateY(-5px); /* Efeito de elevação ao passar o mouse */
+    cursor: pointer; /* Cursor de mão ao passar o mouse */
 }
-.card p{
-    color: aliceblue;
-    font-size: 16px;
-}
-.image {
-    float: right;
-    max-width: 64;
-    max-height: 64;
-}
-.gree {
-    border-left: 3px solid #3bb54a;
+
+.card p {
+    color: #333; /* Cor do texto */
+    font-size: 14px; /* Tamanho da fonte do texto */
 }
