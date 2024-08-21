@@ -1,0 +1,70 @@
+{% extends 'modelo.html' %}
+{% load static %}
+
+{% block titulo %}
+    <title> triagens </title>
+{% endblock %}
+
+{% block conteudo %}
+    <div class="container">
+        <h3>Lista de triagens  </h3>
+        
+        <hr>
+
+        <div class="table-responsive">
+            <form action="?" method="GET">
+                <input type="text" name="nome" class="p-1 border" value="{{ request.GET.nome }}">
+                <button type="submit" class="btn btn-success">Buscar</button>
+                <a href="{% url 'Listar-triagem' %}">Limpar</a>
+            </form>
+
+            <hr>
+
+            <table class="table table-striped">
+                <tr>
+                    <th>data</th>
+                    <th>horário</th>
+                    <th>pressão</th>
+                    <th>médico</th>
+                    <th>paciente</th>
+                </tr>
+
+                {% for triagem in object_list %}
+                <tr>
+                    <td>{{ triagem.data }}</td>
+                    <td>{{ triagem.horario }}</td>
+                    <td>{{ triagem.pressao }}</td>
+                    <td>{{ triagem.medico }}</td> 
+                    <td>{{ triagem.paciente }}</td>
+                    <td>
+                        <a href="{%  url 'editar-triagem' triagem.pk %}" class="btn btn-warning btn-sm" title="Editar">Editar</a>
+                        <a href="{% url 'excluir-triagem' triagem.pk %}" class="btn btn-danger btn-sm" title="Excluir">Excluir</a>
+                    </td>
+                </tr>
+
+                {% empty %}
+                <tr>
+                    <td colspan="3">Nenhuma  triagem registrada.</td>
+                </tr>
+                {% endfor %}
+            </table>
+
+            <div class="text-center">
+                <a href="?page=1">Primeira</a>
+
+                {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}">Voltar</a>
+                {% endif %}
+
+                <span>Página: {{ page_obj.number }}</span>
+
+                {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">Próxima</a>
+                {% endif %}
+
+                <a href="?page={{ page_obj.paginator.num_pages }}">Última</a>
+            </div>
+            <a  href="{% url 'cadastrar-triagem' %}"><button class="btn btn-primary btn-sm" >cadastrar nova triagem</button></a> 
+        </div>
+    </div>
+{% endblock %}

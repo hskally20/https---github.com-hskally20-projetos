@@ -16,26 +16,30 @@ urlpatterns = [
     path('cadastrar-cronograma', IndexView.as_view(), name='cadastrar-cronograma'),
     path('cadastrar-consulta', IndexView.as_view(), name='cadastrar-consulta'),
     path('cadastrar-comentario', IndexView.as_view(), name='cadastrar-comentario'),
+    path('cadastrar-triagem', IndexView.as_view(), name='cadastrar-triagem'),
 
     #listas
     path('listar-hospital', IndexView.as_view(), name='listar-hospital'),
     path('listar-Medico', IndexView.as_view(), name='listar-Medico'),
     
     path('Listar-cronograma', IndexView.as_view(), name='Listar-cronograma'),
+    path('Listar-triagem', IndexView.as_view(), name='Listar-triagem'),
     path('Listar-consulta', IndexView.as_view(), name='Listar-consulta'),
-     path('Listar-comentario', IndexView.as_view(), name='Listar-comentario'),
+    path('Listar-comentario', IndexView.as_view(), name='Listar-comentario'),
     # deletes
     path('excluir-hospital', IndexView.as_view(), name='excluir-hospital'),
     path('excluir-medico', IndexView.as_view(), name='excluir-medico'),
     path('excluir-paciente', IndexView.as_view(), name='excluir-paciente'),
     path('excluir-cronograma', IndexView.as_view(), name='excluir-cronograma'),
     path('excluir-consulta', IndexView.as_view(), name='excluir-consulta'),
+    path('excluir-triagem', IndexView.as_view(), name='excluir-triagem'),
     # editar
     path('editar-hospital', IndexView.as_view(), name='editar-hospital'),
     path('editar-medico', IndexView.as_view(), name='editar-medico'),
     path('editar-paciente', IndexView.as_view(), name='editar-paciente'),
     path('editar-cronograma', IndexView.as_view(), name='editar-cronograma'),
     path('editar-consulta', IndexView.as_view(), name='editar-consulta'),
+    path('editar-triagem', IndexView.as_view(), name='editar-triagem'),
 
     #sugestoes
 

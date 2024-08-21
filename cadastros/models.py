@@ -34,7 +34,7 @@ class Paciente(models.Model):
     idade = models.IntegerField (verbose_name='idade')
     
     def __str__(self):
-        return "{} ({})".format(self.nome, self.descricao)
+        return "{} ({})".format(self.nome, self.hospital)
 
 
 class Cronograma(models.Model):
@@ -66,4 +66,16 @@ class Comentario(models.Model):
        sugestoes = models.TextField( verbose_name ='sugestoes', max_length=255 )
        def __str__(self):
            return "{} ({})".format(self.nota, self.sugestão)
-  
+class Triagem(models.Model):
+    usuario  = models.ForeignKey(User, on_delete=models.PROTECT)
+    paciente = models.ForeignKey(Paciente,on_delete = models.PROTECT)
+    data = models.CharField (verbose_name='data', max_length = 10)
+    medico = models.ForeignKey (Medico, on_delete=models.PROTECT)
+    hospital = models.ForeignKey(Hospital, on_delete=models.PROTECT)
+    horario= models.CharField( verbose_name="horario" , max_length=15 )
+    pressao = models.CharField( verbose_name ='pressao' ,max_length=20, )
+    def __str__(self):
+        return "{} ({})".format(self.horario)
+
+    
+     

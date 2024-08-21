@@ -1,8 +1,8 @@
 from django.urls import path
-from .views import HospitalCreate, MedicoCreate , PacienteCreate , CronogramaCreate , ConsultaCreate, ComentarioCreate
-from .views import  HospitalUpdate, MedicoUpdate , PacienteUpdate,CronogramaUpdate , ConsultaUpdate ,Consulta2Update
-from .views import  HospitalDelete,MedicoDelete , Pacientedelete , CronogramaDelete, ConsultaDelete
-from .views import  HospitalList,MedicoList ,PacienteList ,CronogramaList ,ConsultaList,ComentarioList
+from .views import HospitalCreate, MedicoCreate , PacienteCreate , CronogramaCreate , ConsultaCreate, ComentarioCreate , TriagemCreate
+from .views import  HospitalUpdate, MedicoUpdate , PacienteUpdate,CronogramaUpdate , ConsultaUpdate ,Consulta2Update, TriagemUpdate
+from .views import  HospitalDelete,MedicoDelete , Pacientedelete , CronogramaDelete, ConsultaDelete, TriagemDelete
+from .views import  HospitalList,MedicoList ,PacienteList ,CronogramaList ,ConsultaList,ComentarioList,TriagemList
 
 
 
@@ -22,6 +22,8 @@ urlpatterns = [
    
     path('cadastrar/comentario/', ComentarioCreate.as_view(),
         name='cadastra-comentario'),
+     path('cadastrar/triagem/', TriagemCreate.as_view(),
+        name='cadastrar-triagem'),
 
     path('editar/hospital/<int:pk>', HospitalUpdate.as_view(),
         name='editar-hospital'),
@@ -35,6 +37,8 @@ urlpatterns = [
         name='editar-consulta'),
     path('editar/consulta2/<int:pk>', Consulta2Update.as_view(),
         name='editar-consulta2'),
+    path('editar/triagem/<int:pk>', TriagemUpdate.as_view(),
+        name='editar-triagem'),
     
 
     
@@ -48,6 +52,8 @@ urlpatterns = [
         name='excluir-cronograma'),
     path('excluir/consulta/<int:pk>',ConsultaDelete.as_view(),
         name='excluir-consulta'),
+    path('excluir/triagem/<int:pk>',TriagemDelete.as_view(),
+        name='excluir-triagem'),
     
     path('listar/hospital/', HospitalList.as_view(),
         name='listar-hospital'),
@@ -61,6 +67,8 @@ urlpatterns = [
     name='Listar-consulta'),
     path('listar/comentario/',ComentarioList.as_view(),
     name='Listar-comentario'),
+    path('listar/triagem/',TriagemList.as_view(),
+    name='Listar-triagem'),
     
    
 ]

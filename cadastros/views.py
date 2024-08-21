@@ -3,7 +3,7 @@ from django.views.generic.list import ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from braces.views import GroupRequiredMixin
 from django.urls import reverse_lazy
-from .models import Hospital, Medico ,Paciente,Cronograma ,Consulta,Comentario
+from .models import Hospital, Medico ,Paciente,Cronograma ,Consulta,Comentario, Triagem
 from django.http import JsonResponse
 from django.template.loader import render_to_string
 from django.shortcuts import render
@@ -70,6 +70,22 @@ class PacienteCreate(GroupRequiredMixin, CreateView):
       context['conteudo'] = 'se nao tem doença crônica nao prenchar o campo abaixo !'
       return context
 
+class TriagemCreate(GroupRequiredMixin, CreateView):
+    group_required = u'Medico' 
+    login_url = reverse_lazy('login')
+    model = Triagem
+    fields = ['data','horario', 'pressao', 'hospital', 'medico' , 'paciente']
+    template_name = 'form.html'
+    success_url = reverse_lazy('Listar-triagem') 
+    def get_context_data(self, *args, **kwargs):
+      context = super().get_context_data(*args, **kwargs)
+      context['Titulo'] = 'Cadastro de triagens'
+      context['conteudo'] = 'prenchar todos os campos'
+      return context
+   
+
+
+
 # Update
 class HospitalUpdate(GroupRequiredMixin, UpdateView):
     group_required = u"Admin"
@@ -78,6 +94,10 @@ class HospitalUpdate(GroupRequiredMixin, UpdateView):
     fields = ['nome', 'descricao']
     template_name = 'form.html'
     success_url = reverse_lazy('listar-hospital')
+    def get_object(self, query=None):
+      self.object = Hospital.objects.get(pk = self.kwargs['pk'], usuario =
+      self.request.user)
+      return self.object
 
  
 
@@ -116,7 +136,22 @@ class PacienteUpdate(GroupRequiredMixin, UpdateView):
         url = super().form_valid(form)
         return url
 
+class TriagemUpdate(GroupRequiredMixin, UpdateView):
+    group_required = u"Paciente"
+    model = Triagem
+    fields = ['paciente', 'data', 'medico', 'hospital', 'horario', 'pressao']
+    template_name = 'form.html'
+    success_url = reverse_lazy('listar-triagem')
+    def get_object(self, query=None):
+      self.object = Triagem.objects.get(pk = self.kwargs ['pk'], usuario =
+      self.request.user)
+      return self.object
 
+    def get_context_data(self, *args, **kwargs):
+      context = super().get_context_data(*args, **kwargs)
+      context['Titulo'] = 'Cadastro de triagens'
+      context['conteudo'] = 'prenchar todos os campos'
+      return context
 
 # Delete
 class HospitalDelete(GroupRequiredMixin, DeleteView):
@@ -150,6 +185,23 @@ class  Pacientedelete(GroupRequiredMixin,DeleteView):
       self.object = Paciente.objects.get(pk = self.kwargs ['pk'], usuario =
       self.request.user)
       return self.object
+
+class TriagemDelete(GroupRequiredMixin, DeleteView):
+    group_required = u'Medico' 
+    login_url = reverse_lazy('login')
+    model = Triagem
+    template_name = 'form-excluir.html'
+    success_url = reverse_lazy('Listar-triagem')
+    def get_object(self, query=None):
+      self.object = Triagem.objects.get(pk = self.kwargs ['pk'], usuario =
+      self.request.user)
+      return self.object
+       
+    def get_context_data(self, *args, **kwargs):
+      context = super().get_context_data(*args, **kwargs)
+      context['Titulo'] = 'Cadastro de triagens'
+      context['conteudo'] = 'prenchar todos os campos'
+      return context
 
 # List
 class HospitalList(GroupRequiredMixin, ListView):
@@ -192,6 +244,21 @@ class PacienteList(LoginRequiredMixin, ListView):
          paciente = Paciente.objects.all()
        return paciente
 
+class TriagemList(GroupRequiredMixin, ListView):
+    group_required = u'Medico'
+    login_url = reverse_lazy('login')
+    model = Triagem
+    template_name = 'listas/triagem.html'
+    paginate_by = 5
+    def get_queryset(self):
+       nome = self.request.GET.get('nome')
+       if nome:
+         paciente = Triagem.objects.filter(nome__icontains = nome)
+       else:
+         paciente = Triagem.objects.all()
+       return paciente
+     
+
 # <================   funçoes do site   ==================>
 
 class CronogramaCreate(GroupRequiredMixin,CreateView):
@@ -223,7 +290,7 @@ class CronogramaUpdate( GroupRequiredMixin,UpdateView):
     group_required = u"Medico"
     login_url = reverse_lazy('login')
     model = Cronograma
-    fields = ['nome', 'data','medico','hospital','horario']
+    fields = ['paciente',' data','medico','hospital',' horario', 'pressao']
     template_name = 'form.html'
     success_url = reverse_lazy('Listar-cronograma')
     def get_object(self, query=None):
