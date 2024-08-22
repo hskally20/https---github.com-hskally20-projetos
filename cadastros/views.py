@@ -77,12 +77,16 @@ class TriagemCreate(GroupRequiredMixin, CreateView):
     fields = ['data','horario', 'pressao', 'hospital', 'medico' , 'paciente']
     template_name = 'form.html'
     success_url = reverse_lazy('Listar-triagem') 
+    def form_valid(self, form):
+        form.instance.usuario = self.request.user
+        url = super().form_valid(form)
+        return url
     def get_context_data(self, *args, **kwargs):
       context = super().get_context_data(*args, **kwargs)
       context['Titulo'] = 'Cadastro de triagens'
       context['conteudo'] = 'prenchar todos os campos'
       return context
-   
+    
 
 
 

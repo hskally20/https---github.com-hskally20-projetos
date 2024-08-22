@@ -75,7 +75,7 @@ class Triagem(models.Model):
     horario= models.CharField( verbose_name="horario" , max_length=15 )
     pressao = models.CharField( verbose_name ='pressao' ,max_length=20, )
     def __str__(self):
-        return "{} ({})".format(self.horario)
+       return "{}".format(self.paciente.nome)
 
     
      
