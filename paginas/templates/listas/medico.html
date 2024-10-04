@@ -2,12 +2,12 @@
 {% load static %}
 
 {% block titulo %}
-    <title> médicos </title>
+    <title>Médicos</title>
 {% endblock %}
 
 {% block conteudo %}
     <div class="container">
-        <h3>Lista de médicos </h3>
+        <h3>Lista de Médicos</h3>
         
         <hr>
 
@@ -23,25 +23,29 @@
             <table class="table table-striped">
                 <tr>
                     <th>Nome</th>
-                    <th>numerodo do telefone</th>
-                    <th>especificação</th>
+                    <th>Número do Telefone</th>
+                    <th>Especificação</th>
                     <th>Opções</th>
+                    <th>Ação</th> <!-- Coluna para a ação de chamar paciente -->
                 </tr>
 
                 {% for medico in object_list %}
                 <tr>
                     <td>{{ medico.nome }}</td>
-                    <td>{{ medico.numero}}</td>
-                    <td>{{ medico.especificacao}}</td>
+                    <td>{{ medico.numero }}</td>
+                    <td>{{ medico.especificacao }}</td>
                     <td>
                         <a href="{% url 'editar-medico' medico.pk %}" class="btn btn-warning btn-sm" title="Editar">Editar</a>
-                        <a href="{% url 'excluir-medico' medico.pk %}" class="btn btn-danger btn-sm" title="Excluir">Execluir</a>
+                        <a href="{% url 'excluir-medico' medico.pk %}" class="btn btn-danger btn-sm" title="Excluir">Excluir</a>
+                    </td>
+                    <td>
+                        <button onclick="chamarPaciente({{ paciente.id }})" class="btn btn-info btn-sm">Chamar Paciente</button> <!-- Botão para chamar o paciente -->
                     </td>
                 </tr>
 
                 {% empty %}
                 <tr>
-                    <td colspan="3">Nenhuma medico registrada.</td>
+                    <td colspan="5">Nenhum médico registrado.</td>
                 </tr>
                 {% endfor %}
             </table>
@@ -61,7 +65,16 @@
 
                 <a href="?page={{ page_obj.paginator.num_pages }}">Última</a>
             </div>
-            <a  href="{% url 'cadastrar-medico' %}"><button class="btn btn-primary btn-sm" >cadastra novo medico</button></a> 
+            <a href="{% url 'cadastrar-medico' %}"><button class="btn btn-primary btn-sm">Cadastrar novo médico</button></a> 
         </div>
     </div>
+
+    <!-- Função para chamar paciente -->
+    <script>
+        function chamarPaciente(pacienteId) {
+            fetch(`/chamar_paciente/${pacienteId}/`)
+                .then(response => response.json())
+                .then(data => console.log(data));
+        }
+    </script>
 {% endblock %}

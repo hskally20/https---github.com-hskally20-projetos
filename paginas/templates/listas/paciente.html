@@ -2,12 +2,12 @@
 {% load static %}
 
 {% block titulo %}
-    <title> pacientes </title>
+    <title>Pacientes</title>
 {% endblock %}
 
 {% block conteudo %}
     <div class="container">
-        <h3>Lista de pacientes </h3>
+        <h3>Lista de Pacientes</h3>
         
         <hr>
 
@@ -23,27 +23,26 @@
             <table class="table table-striped ">
                 <tr>
                     <th>Nome</th>
-                    <th>comun / preferencial </th>
-                    <th> idade </th>
-                    <th> sintomas </th>
+                    <th>Comun / Preferencial</th>
+                    <th>Idade</th>
+                    <th>Sintomas</th>
                     <th>Opções</th>
                 </tr>
 
-                {% for paciente  in object_list %}
+                {% for paciente in object_list %}
                 <tr>
                     <td>{{ paciente.nome }}</td>
-                    <td>{{ paciente.descricao}}</td>
-                    <td>{{ paciente.idade}}</td>
-                    <td>{{ paciente.sintomas}}</td>
+                    <td>{{ paciente.descricao }}</td>
+                    <td>{{ paciente.idade }}</td>
+                    <td>{{ paciente.sintomas }}</td>
                     <td>
                         <a href="{% url 'editar-paciente' paciente.pk %}" class="btn btn-warning btn-sm" title="Editar">Editar</a>
-                        <a href="{% url 'excluir-paciente' paciente.pk %}" class="btn btn-danger btn-sm" title="Excluir">excluir</a>
+                        <a href="{% url 'excluir-paciente' paciente.pk %}" class="btn btn-danger btn-sm" title="Excluir">Excluir</a>
                     </td>
                 </tr>
-               
                 {% empty %}
                 <tr>
-                    <td colspan="3">Nenhuma paciente registrada.</td>
+                    <td colspan="5">Nenhum paciente registrado.</td>
                 </tr>
                 {% endfor %}
             </table>
@@ -63,7 +62,18 @@
 
                 <a href="?page={{ page_obj.paginator.num_pages }}">Última</a>
             </div>
-            <a  href="{% url 'cadastrar-paciente' %}"><button class="btn btn-primary btn-sm" > cadastra outro paciente </button></a>
+            <a href="{% url 'cadastrar-paciente' %}"><button class="btn btn-primary btn-sm">Cadastrar outro paciente</button></a>
         </div>
     </div>
+
+    <!-- Adicionando a conexão WebSocket -->
+    <script>
+        const pacienteId = "{{ paciente.id }}"; // Id do paciente
+        const socket = new WebSocket(`ws://${window.location.host}/ws/sala/${pacienteId}/`);
+
+        socket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+            alert(data.message); // Exibir a notificação para o paciente
+        };
+    </script>
 {% endblock %}
