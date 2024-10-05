@@ -76,6 +76,14 @@ class Triagem(models.Model):
     pressao = models.CharField( verbose_name ='pressao' ,max_length=20, )
     def __str__(self):
        return "{}".format(self.paciente.nome)
+    
+class Notificacao(models.Model):
+    paciente = models.ForeignKey(User, on_delete=models.CASCADE)
+    mensagem = models.CharField(max_length=255)
+    data = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.mensagem
 
     
      

@@ -26,6 +26,7 @@ urlpatterns = [
     path('Listar-triagem', IndexView.as_view(), name='Listar-triagem'),
     path('Listar-consulta', IndexView.as_view(), name='Listar-consulta'),
     path('Listar-comentario', IndexView.as_view(), name='Listar-comentario'),
+    path('Listar-notificacao', IndexView.as_view(), name='Listar-notificacao'),
     # deletes
     path('excluir-hospital', IndexView.as_view(), name='excluir-hospital'),
     path('excluir-medico', IndexView.as_view(), name='excluir-medico'),

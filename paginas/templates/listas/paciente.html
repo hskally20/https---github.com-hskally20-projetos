@@ -39,6 +39,9 @@
                         <a href="{% url 'editar-paciente' paciente.pk %}" class="btn btn-warning btn-sm" title="Editar">Editar</a>
                         <a href="{% url 'excluir-paciente' paciente.pk %}" class="btn btn-danger btn-sm" title="Excluir">Excluir</a>
                     </td>
+                    <td>
+                        <button onclick="chamarPaciente({ pacienteId })" class="btn btn-info btn-sm">Chamar Paciente</button> <!-- Botão para chamar o paciente -->
+                    </td>
                 </tr>
                 {% empty %}
                 <tr>
@@ -74,6 +77,17 @@
         socket.onmessage = function(e) {
             const data = JSON.parse(e.data);
             alert(data.message); // Exibir a notificação para o paciente
+            
         };
+    
     </script>
+     <!-- Função para chamar paciente -->
+     <script>
+        function chamarPaciente(pacienteId) {
+            fetch(`/chamar_paciente/${pacienteId}/`)
+                .then(response => response.json())
+                .then(data => console.log(data));
+        }
+    </script>
+    
 {% endblock %}

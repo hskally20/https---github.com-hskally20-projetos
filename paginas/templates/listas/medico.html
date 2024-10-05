@@ -39,7 +39,7 @@
                         <a href="{% url 'excluir-medico' medico.pk %}" class="btn btn-danger btn-sm" title="Excluir">Excluir</a>
                     </td>
                     <td>
-                        <button onclick="chamarPaciente({{ paciente.id }})" class="btn btn-info btn-sm">Chamar Paciente</button> <!-- Botão para chamar o paciente -->
+                        <button onclick="chamarPaciente({ pacienteId })" class="btn btn-info btn-sm">Chamar Paciente</button> <!-- Botão para chamar o paciente -->
                     </td>
                 </tr>
 

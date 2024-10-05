@@ -2,7 +2,7 @@ from django.urls import path
 from .views import HospitalCreate, MedicoCreate , PacienteCreate , CronogramaCreate , ConsultaCreate, ComentarioCreate , TriagemCreate
 from .views import  HospitalUpdate, MedicoUpdate , PacienteUpdate,CronogramaUpdate , ConsultaUpdate ,Consulta2Update, TriagemUpdate
 from .views import  HospitalDelete,MedicoDelete , PacienteDelete , CronogramaDelete, ConsultaDelete, TriagemDelete
-from .views import  HospitalList,MedicoList ,PacienteList ,CronogramaList ,ConsultaList,ComentarioList,TriagemList
+from .views import  HospitalList,MedicoList ,PacienteList ,CronogramaList ,ConsultaList,ComentarioList,TriagemList, NotificacaoList
 
 
 
@@ -69,6 +69,8 @@ urlpatterns = [
     name='Listar-comentario'),
     path('listar/triagem/',TriagemList.as_view(),
     name='Listar-triagem'),
+    path('listar/notificacao/',NotificacaoList.as_view(),
+    name='Listar-notificacao'),
     
    
 ]
