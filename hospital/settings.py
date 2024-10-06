@@ -41,6 +41,9 @@ INSTALLED_APPS = [
     'cadastros.apps.CadastrosConfig',
     'usuarios.apps.UsuariosConfig',
     'channels',  # Adiciona Django Channels aqui
+    
+
+    
 ]
 
 MIDDLEWARE = [

@@ -288,6 +288,9 @@ class NotificacaoList(LoginRequiredMixin, ListView):
     def get_queryset(self):
         # Retorna as notificações associadas ao paciente autenticado
         return Notificacao.objects.filter(paciente=self.request.user)
+    
+    
+
 
 
 
