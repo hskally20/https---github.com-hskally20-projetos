@@ -1,8 +1,8 @@
 from django.urls import path
 from .views import HospitalCreate, MedicoCreate , PacienteCreate , CronogramaCreate , ConsultaCreate, ComentarioCreate , TriagemCreate
 from .views import  HospitalUpdate, MedicoUpdate , PacienteUpdate,CronogramaUpdate , ConsultaUpdate ,Consulta2Update, TriagemUpdate
-from .views import  HospitalDelete,MedicoDelete , Pacientedelete , CronogramaDelete, ConsultaDelete, TriagemDelete
-from .views import  HospitalList,MedicoList ,PacienteList ,CronogramaList ,ConsultaList,ComentarioList,TriagemList
+from .views import  HospitalDelete,MedicoDelete , PacienteDelete , CronogramaDelete, ConsultaDelete, TriagemDelete
+from .views import  HospitalList,MedicoList ,PacienteList ,CronogramaList ,ConsultaList,ComentarioList,TriagemList, NotificacaoList
 
 
 
@@ -46,7 +46,7 @@ urlpatterns = [
         name='excluir-hospital'),
     path('excluir/medico/<int:pk>',MedicoDelete.as_view(),
         name='excluir-medico'),
-    path('excluir/paciente/<int:pk>', Pacientedelete.as_view(),
+    path('excluir/paciente/<int:pk>', PacienteDelete.as_view(),
         name='excluir-paciente'),
     path('excluir/cronograma/<int:pk>', CronogramaDelete.as_view(),
         name='excluir-cronograma'),
@@ -69,6 +69,8 @@ urlpatterns = [
     name='Listar-comentario'),
     path('listar/triagem/',TriagemList.as_view(),
     name='Listar-triagem'),
+    path('listar/notificacao/',NotificacaoList.as_view(),
+    name='Listar-notificacao'),
     
    
 ]

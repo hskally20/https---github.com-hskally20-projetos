@@ -3,7 +3,7 @@ from django.views.generic.list import ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from braces.views import GroupRequiredMixin
 from django.urls import reverse_lazy
-from .models import Hospital, Medico, Paciente, Cronograma, Consulta, Comentario, Triagem
+from .models import Hospital, Medico, Paciente, Cronograma, Consulta, Comentario, Triagem, Notificacao
 from django.http import JsonResponse
 from django.template.loader import render_to_string
 from django.shortcuts import render
@@ -279,6 +279,20 @@ class TriagemList(GroupRequiredMixin, ListView):
         else:
             triagem = Triagem.objects.all()
         return triagem
+    
+class NotificacaoList(LoginRequiredMixin, ListView):
+    model = Notificacao
+    template_name = 'listas/notificacoes_paciente.html'
+    context_object_name = 'notificacoes'
+    
+    def get_queryset(self):
+        # Retorna as notificações associadas ao paciente autenticado
+        return Notificacao.objects.filter(paciente=self.request.user)
+    
+    
+
+
+
 
 
 # <================   funções do site   ==================>
