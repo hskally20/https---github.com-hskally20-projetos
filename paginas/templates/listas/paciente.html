@@ -11,6 +11,8 @@
         
         <hr>
 
+        <div id="mensagem" style="color: green; margin-bottom: 20px;"></div> <!-- Div para mensagens -->
+
         <div class="table-responsive">
             <form action="?" method="GET">
                 <input type="text" name="nome" class="p-1 border" value="{{ request.GET.nome }}">
@@ -27,6 +29,7 @@
                     <th>Idade</th>
                     <th>Sintomas</th>
                     <th>Opções</th>
+                    <th>Ações</th>
                 </tr>
 
                 {% for paciente in object_list %}
@@ -40,12 +43,12 @@
                         <a href="{% url 'excluir-paciente' paciente.pk %}" class="btn btn-danger btn-sm" title="Excluir">Excluir</a>
                     </td>
                     <td>
-                        <button onclick="chamarPaciente({ medicoId })" class="btn btn-info btn-sm">Chamar Paciente</button> <!-- Botão para chamar o paciente -->
+                        <button onclick="chamarPaciente({{ paciente.pk }})" class="btn btn-info btn-sm">Chamar Paciente</button> <!-- Botão para chamar o paciente -->
                     </td>
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="5">Nenhum paciente registrado.</td>
+                    <td colspan="6">Nenhum paciente registrado.</td>
                 </tr>
                 {% endfor %}
             </table>
@@ -69,25 +72,75 @@
         </div>
     </div>
 
-    <!-- Adicionando a conexão WebSocket -->
     <script>
-        const pacienteId = "{{ paciente.id }}"; // Id do paciente
-        const socket = new WebSocket(`ws://${window.location.host}/ws/sala/${pacienteId}/`);
-
-        socket.onmessage = function(e) {
-            const data = JSON.parse(e.data);
-            alert(data.message); // Exibir a notificação para o paciente
-            
+        // Cria uma nova conexão WebSocket
+        const ws = new WebSocket('ws://localhost:3000');
+    
+        // Quando a conexão é aberta, registra o usuário
+        ws.onopen = () => {
+            const usuarioId = 'usuario1'; // Você pode torná-lo dinâmico
+            ws.send(JSON.stringify({ type: 'register', usuarioId }));
+            console.log('Conexão WebSocket estabelecida e usuário registrado.');
         };
     
-    </script>
-     <!-- Função para chamar paciente -->
-     <script>
-        function chamarPaciente(pacienteId) {
-            fetch(`/chamar_paciente/${pacienteId}/`)
-                .then(response => response.json())
-                .then(data => console.log(data));
+        // Função para cadastrar um paciente (se necessário)
+        function cadastrarPaciente(paciente) {
+            ws.send(JSON.stringify({ type: 'cadastrarPaciente', paciente }));
+            console.log('Paciente cadastrado:', paciente);
         }
+    
+        // Função para chamar um paciente
+        function chamarPaciente(pacienteId) {
+            ws.send(JSON.stringify({ type: 'chamarPaciente', pacienteId }));
+            console.log('Paciente chamado:', pacienteId);
+        }
+    
+        // Recebe mensagens do servidor
+        ws.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            console.log('Mensagem recebida:', data);
+    
+            if (data.type === 'notificacao') {
+                // Exibe a mensagem de sucesso
+                const mensagemDiv = document.getElementById('mensagem');
+                mensagemDiv.textContent = `Notificação recebida: ${data.message}`;
+    
+                // Limpa a mensagem após 5 segundos
+                setTimeout(() => {
+                    mensagemDiv.textContent = '';
+                }, 5000);
+            }
+        };
+    
+        // Lida com erros de conexão
+        ws.onerror = (error) => {
+            console.error('WebSocket erro:', error);
+        };
+    
+        // Lida com fechamento da conexão
+        ws.onclose = (event) => {
+            console.log('Conexão WebSocket fechada:', event);
+            // Aqui você pode tentar reconectar, se desejar
+        };
+    
+    const ws = new WebSocket('ws://localhost:3000');
+
+    ws.onopen = () => {
+        console.log('Conexão WebSocket estabelecida.');
+        ws.send(JSON.stringify({ type: 'test', message: 'Conexão bem-sucedida!' }));
+    };
+
+    ws.onmessage = (event) => {
+        console.log('Mensagem recebida do servidor:', event.data);
+    };
+
+    ws.onerror = (error) => {
+        console.error('Erro no WebSocket:', error);
+    };
+
+    ws.onclose = () => {
+        console.log('Conexão WebSocket fechada.');
+    };
     </script>
     
 {% endblock %}
