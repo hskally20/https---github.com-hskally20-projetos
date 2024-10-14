@@ -3,7 +3,7 @@ from .views import HospitalCreate, MedicoCreate , PacienteCreate , CronogramaCre
 from .views import  HospitalUpdate, MedicoUpdate , PacienteUpdate,CronogramaUpdate , ConsultaUpdate ,Consulta2Update, TriagemUpdate
 from .views import  HospitalDelete,MedicoDelete , PacienteDelete , CronogramaDelete, ConsultaDelete, TriagemDelete
 from .views import  HospitalList,MedicoList ,PacienteList ,CronogramaList ,ConsultaList,ComentarioList,TriagemList, NotificacaoList
-
+from .views import ChamarPacienteView
 
 
 
@@ -72,5 +72,7 @@ urlpatterns = [
     path('listar/notificacao/',NotificacaoList.as_view(),
     name='Listar-notificacao'),
     
-   
+    path('chamar-paciente/', ChamarPacienteView.as_view(), name='chamar-paciente'),
+
+
 ]

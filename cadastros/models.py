@@ -32,6 +32,10 @@ class Paciente(models.Model):
     sintomas = models.CharField(max_length=150, verbose_name="simtomas")
     doença_cronica = models.CharField(max_length=150, verbose_name="doença_cronica", null =True ,blank = True)
     idade = models.IntegerField (verbose_name='idade')
+    usuario = models.ForeignKey(User, related_name='pacientes', on_delete=models.CASCADE)
+    
+    # Define o campo 'usuario_cadastrador' que refere-se ao usuário que cadastrou o paciente.
+    usuario_cadastrador = models.ForeignKey(User, related_name='pacientes_cadastrados', on_delete=models.CASCADE)
     
     def __str__(self):
         return "{} ({})".format(self.nome, self.hospital)
@@ -66,6 +70,7 @@ class Comentario(models.Model):
        sugestoes = models.TextField( verbose_name ='sugestoes', max_length=255 )
        def __str__(self):
            return "{} ({})".format(self.nota, self.sugestão)
+
 class Triagem(models.Model):
     usuario  = models.ForeignKey(User, on_delete=models.PROTECT)
     paciente = models.ForeignKey(Paciente,on_delete = models.PROTECT)
@@ -76,14 +81,12 @@ class Triagem(models.Model):
     pressao = models.CharField( verbose_name ='pressao' ,max_length=20, )
     def __str__(self):
        return "{}".format(self.paciente.nome)
-    
+ 
 class Notificacao(models.Model):
     paciente = models.ForeignKey(User, on_delete=models.CASCADE)
     mensagem = models.CharField(max_length=255)
     data = models.DateTimeField(auto_now_add=True)
-
     def __str__(self):
-        return self.mensagem
-
+      return self.mensagem
     
      

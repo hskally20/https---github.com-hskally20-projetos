@@ -1,6 +1,7 @@
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
 from braces.views import GroupRequiredMixin
 from django.urls import reverse_lazy
 from .models import Hospital, Medico, Paciente, Cronograma, Consulta, Comentario, Triagem, Notificacao
@@ -9,6 +10,46 @@ from django.template.loader import render_to_string
 from django.shortcuts import render
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
+from django.shortcuts import render, get_object_or_404
+# cadastros/views.py
+
+from django.http import JsonResponse
+from django.views import View
+import json
+from .models import Paciente, Notificacao
+from django.contrib.auth.mixins import LoginRequiredMixin
+
+class ChamarPacienteView(LoginRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            try:
+                data = json.loads(request.body)
+                paciente_id = data.get("paciente_id")
+
+                if not paciente_id:
+                    return JsonResponse({"success": False, "message": "Paciente ID não fornecido."})
+
+                try:
+                    paciente = Paciente.objects.get(id=paciente_id)
+                except Paciente.DoesNotExist:
+                    return JsonResponse({"success": False, "message": "Paciente não encontrado."})
+
+                if paciente.usuario_cadastrador != request.user:
+                    return JsonResponse({"success": False, "message": "Você não tem permissão para chamar esse paciente."})
+
+                mensagem = f'O médico está chamando o paciente {paciente.nome}.'
+
+                try:
+                    notificação = Notificacao.objects.create(paciente=paciente.usuario_cadastrador, mensagem=mensagem)
+                except Exception as e:
+                    return JsonResponse({"success": False, "message": f"Erro ao salvar notificação: {str(e)}"})
+
+                return JsonResponse({"success": True, "message": "Notificação enviada!"})
+
+            except json.JSONDecodeError:
+                return JsonResponse({"success": False, "message": "Erro ao processar requisição."})
+
+        return JsonResponse({"success": False, "message": "Erro ao processar requisição."})
 
 
 # <=============== usuários ==============>
@@ -54,7 +95,7 @@ class PacienteCreate(GroupRequiredMixin, CreateView):
     group_required = u'Paciente'
     login_url = reverse_lazy('login')
     model = Paciente
-    fields = ['telefone', 'nome', 'numero_sus', 'hospital', 'doença_cronica', 'sintomas', 'idade']
+    fields = ['telefone', 'nome', 'numero_sus', 'hospital', 'doença_cronica', 'sintomas', 'idade', 'usuario_cadastrador']
     template_name = 'form.html'
     success_url = reverse_lazy('Listar-paciente')
 
@@ -250,8 +291,8 @@ class MedicoList(GroupRequiredMixin, ListView):
         return medico
 
 
+
 class PacienteList(LoginRequiredMixin, ListView):
-    login_url = reverse_lazy('login')
     model = Paciente
     template_name = 'listas/paciente.html'
     paginate_by = 5
@@ -259,11 +300,37 @@ class PacienteList(LoginRequiredMixin, ListView):
     def get_queryset(self):
         nome = self.request.GET.get('nome')
         if nome:
-            paciente = Paciente.objects.filter(nome__icontains=nome)
-        else:
-            paciente = Paciente.objects.all()
-        return paciente
+            return Paciente.objects.filter(nome__icontains=nome)
+        return Paciente.objects.all()
 
+
+    def post(self, request, *args, **kwargs):
+        # Verifica se a requisição é AJAX (pelo cabeçalho X-Requested-With)
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            paciente_id = request.POST.get("paciente_id")  # ID do paciente chamado
+            if not paciente_id:
+                return JsonResponse({"success": False, "message": "Paciente ID não fornecido."})
+
+            # Verifica se o paciente existe
+            try:
+                paciente = Paciente.objects.get(id=paciente_id)
+            except Paciente.DoesNotExist:
+                return JsonResponse({"success": False, "message": "Paciente não encontrado."})
+
+            # Verifica se o usuário autenticado é o responsável pelo paciente
+            if paciente.usuario_cadastrador != request.user:
+                return JsonResponse({"success": False, "message": "Você não tem permissão para chamar esse paciente."})
+
+            # Cria a notificação para o usuário que cadastrou o paciente
+            mensagem = f'O médico está chamando o paciente {paciente.nome}.'
+            try:
+                Notificacao.objects.create(paciente=paciente.usuario_cadastrador, mensagem=mensagem)
+            except Exception as e:
+                return JsonResponse({"success": False, "message": f"Erro ao salvar notificação: {str(e)}"})
+
+            return JsonResponse({"success": True, "message": "Notificação enviada!"})
+        
+        return JsonResponse({"success": False, "message": "Erro ao processar requisição."})
 
 class TriagemList(GroupRequiredMixin, ListView):
     group_required = u'Medico'
@@ -280,19 +347,15 @@ class TriagemList(GroupRequiredMixin, ListView):
             triagem = Triagem.objects.all()
         return triagem
     
+
 class NotificacaoList(LoginRequiredMixin, ListView):
     model = Notificacao
     template_name = 'listas/notificacoes_paciente.html'
     context_object_name = 'notificacoes'
-    
+
     def get_queryset(self):
-        # Retorna as notificações associadas ao paciente autenticado
+        # Retorna as notificações do usuário logado
         return Notificacao.objects.filter(paciente=self.request.user)
-    
-    
-
-
-
 
 
 # <================   funções do site   ==================>
@@ -452,15 +515,3 @@ class ComentarioList(ListView):
     template_name = 'listas/comentario.html'
     paginate_by = 5
 
-
-# Adicionando a função para chamar o paciente
-def chamar_paciente(request, paciente_id):
-    channel_layer = get_channel_layer()
-    async_to_sync(channel_layer.group_send)(
-        f'notificacao_{paciente_id}',
-        {
-            'type': 'receber_notificacao',
-            'message': 'Você foi chamado para a sala de atendimento.'
-        }
-    )
-    return JsonResponse({'status': 'Notificação enviada'})

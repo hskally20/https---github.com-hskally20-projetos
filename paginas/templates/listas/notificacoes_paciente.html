@@ -1,86 +1,39 @@
-{% extends 'modelo.html' %}
-{% load static %}
+{% extends 'modelo.html' %}  <!-- Herda a estrutura básica do seu modelo -->
 
 {% block titulo %}
-<title>Pacientes</title>
+    <title>Notificações</title>
 {% endblock %}
 
 {% block conteudo %}
-<div class="container">
-    <h3>Lista de Pacientes</h3>
-    
-    <hr>
-
-    <div class="table-responsive">
-        <table class="table table-striped">
-            <tr>
-                <th>Nome</th>
-                <th>Comun / Preferencial</th>
-                <th>Idade</th>
-                <th>Sintomas</th>
-                <th>Opções</th>
-                <th>Ações</th>
-            </tr>
-
-            {% for paciente in object_list %}
-            <tr>
-                <td>{{ paciente.nome }}</td>
-                <td>{{ paciente.descricao }}</td>
-                <td>{{ paciente.idade }}</td>
-                <td>{{ paciente.sintomas }}</td>
-                <td>
-                    <a href="{% url 'editar-paciente' paciente.pk %}" class="btn btn-warning btn-sm">Editar</a>
-                    <a href="{% url 'excluir-paciente' paciente.pk %}" class="btn btn-danger btn-sm">Excluir</a>
-                </td>
-                <td>
-                    <button onclick="chamarPaciente({{ paciente.id }})" class="btn btn-info btn-sm">Chamar Paciente</button>
-                </td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="6">Nenhum paciente registrado.</td>
-            </tr>
-            {% endfor %}
-        </table>
+    <div class="container">
+        <h3>Minhas Notificações</h3>
+        
+        <!-- Verifica se há notificações -->
+        {% if not notificacoes %}
+            <p>Você não tem notificações no momento.</p>
+        {% else %}
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Mensagem</th>
+                            <th>Data</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for notificacao in notificacoes %}
+                            <tr>
+                                <td>{{ notificacao.mensagem }}</td>
+                                <td>{{ notificacao.data|date:"d/m/Y H:i" }}</td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="2">Nenhuma notificação encontrada.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
     </div>
-</div>
-
-<script>
-    const pacienteId = {{ paciente_id }}; // Certifique-se de que o ID do paciente esteja disponível
-    const ws = new WebSocket(`ws://localhost:8000/ws/sala/${pacienteId}/`); // Ajuste para a porta 8000
-
-    ws.onopen = () => {
-        console.log('Conexão WebSocket estabelecida.');
-        const usuarioId = 'usuario1'; // Torne dinâmico se necessário
-        ws.send(JSON.stringify({ type: 'register', usuarioId }));
-    };
-
-    function chamarPaciente(pacienteId) {
-        ws.send(JSON.stringify({ type: 'chamarPaciente', pacienteId }));
-        console.log('Paciente chamado:', pacienteId);
-    }
-
-    ws.onmessage = (event) => {
-        const data = JSON.parse(event.data);
-        console.log('Mensagem recebida:', data);
-
-        if (data.type === 'notificacao') {
-            const mensagemDiv = document.getElementById('mensagem');
-            mensagemDiv.textContent = `Notificação recebida: ${data.message}`;
-
-            setTimeout(() => {
-                mensagemDiv.textContent = '';
-            }, 5000);
-        }
-    };
-
-    ws.onerror = (error) => {
-        console.error('Erro no WebSocket:', error);
-    };
-
-    ws.onclose = (event) => {
-        console.log('Conexão WebSocket fechada:', event);
-    };
-</script>
-
 {% endblock %}

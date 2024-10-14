@@ -1,31 +1,49 @@
+# consumers.py
+
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
 
-class NotificacaoConsumer(AsyncWebsocketConsumer):
+class PacienteConsumer(AsyncWebsocketConsumer):
     async def connect(self):
-        self.paciente_id = self.scope['url_route']['kwargs']['paciente_id']
-        self.sala_grupo = f'notificacao_{self.paciente_id}'
+        # Criação de um canal único por usuário ou por grupo de pacientes
+        self.room_name = "paciente_notifications"  # Pode ser personalizado
+        self.room_group_name = f'paciente_{self.room_name}'
 
-        # Junte-se ao grupo
+        # Adiciona o cliente ao grupo
         await self.channel_layer.group_add(
-            self.sala_grupo,
+            self.room_group_name,
             self.channel_name
         )
 
+        # Confirma a conexão WebSocket
         await self.accept()
 
     async def disconnect(self, close_code):
-        # Saia do grupo
+        # Remove o cliente do grupo
         await self.channel_layer.group_discard(
-            self.sala_grupo,
+            self.room_group_name,
             self.channel_name
         )
 
-    # Método para receber notificações
-    async def receber_notificacao(self, event):
+    # Recebe a notificação do servidor (e.g., chamada de paciente) e envia aos clientes
+    async def receive(self, text_data):
+        text_data_json = json.loads(text_data)
+        message = text_data_json['message']
+
+        # Envia a mensagem para o grupo de notificação
+        await self.channel_layer.group_send(
+            self.room_group_name,
+            {
+                'type': 'chat_message',
+                'message': message
+            }
+        )
+
+    # Recebe a mensagem do grupo e a envia para o WebSocket
+    async def chat_message(self, event):
         message = event['message']
 
-        # Envia mensagem para WebSocket
+        # Envia a mensagem para o WebSocket
         await self.send(text_data=json.dumps({
             'message': message
         }))

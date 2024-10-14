@@ -1,16 +1,18 @@
+# asgi.py
+
 import os
 from django.core.asgi import get_asgi_application
 from channels.routing import ProtocolTypeRouter, URLRouter
 from channels.auth import AuthMiddlewareStack
-from paginas.routing import websocket_urlpatterns  # Atualize conforme necessário
+import cadastros.routing  # Certifique-se de ajustar o caminho para o seu arquivo routing.py
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'hospital.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'meuprojeto.settings')
 
 application = ProtocolTypeRouter({
     "http": get_asgi_application(),
     "websocket": AuthMiddlewareStack(
         URLRouter(
-            websocket_urlpatterns  # Defina suas rotas WebSocket aqui
+            myapp.routing.websocket_urlpatterns  # Defina a URL para WebSockets no routing.py
         )
     ),
 })

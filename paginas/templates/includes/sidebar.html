@@ -80,6 +80,7 @@
                       <a class="dropdown-item"  href="{% url 'Listar-consulta' %}"> consultas agendadas  </a>
                     {% elif group.name == 'Paciente' %}
                       <a class="dropdown-item"  href="{% url 'Listar-consulta' %}"> consultas agendadas  </a>
+                      <a class="dropdown-item"  href="{% url 'Listar-paciente' %}">  pacientes cadastrados </a> 
                     {% endif %}
                       {% endfor %}
                     <a class="dropdown-item"  href="{% url 'Listar-cronograma' %}">  cronogramas  </a>

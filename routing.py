@@ -1,6 +1,9 @@
-from django.urls import path
-from . import consumers
+# routing.py
 
+from django.urls import re_path
+from . import consumers  # Certifique-se de importar o consumer correto
+
+# Defina a URL de WebSocket correta
 websocket_urlpatterns = [
-    path('ws/sala/<int:paciente_id>/', consumers.NotificacaoConsumer.as_asgi()),
+    re_path(r'ws/paciente_notifications/$', consumers.PacienteConsumer.as_asgi()),
 ]

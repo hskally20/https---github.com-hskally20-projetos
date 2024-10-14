@@ -82,6 +82,17 @@ TEMPLATES = [
 WSGI_APPLICATION = 'hospital.wsgi.application'
 ASGI_APPLICATION = 'hospital.asgi.application'  # Adicione esta linha para o ASGI
 
+# Channel Layer usando Redis (ou memória)
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',  # Para testes
+        # ou, se estiver usando Redis, configure como:
+        # 'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        # 'CONFIG': {
+        #     "hosts": [('127.0.0.1', 6379)],
+        #
+    },
+}
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 

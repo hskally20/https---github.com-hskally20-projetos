@@ -1,6 +1,8 @@
-from django.urls import path
+# routing.py
+
+from django.urls import re_path
 from . import consumers
 
 websocket_urlpatterns = [
-    path('ws/sala/<int:paciente_id>/', consumers.NotificacaoConsumer.as_asgi()),
+    re_path(r'ws/paciente_notifications/$', consumers.PacienteConsumer.as_asgi()),
 ]
