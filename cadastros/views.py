@@ -11,12 +11,11 @@ from django.shortcuts import render
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from django.shortcuts import render, get_object_or_404
-# cadastros/views.py
 
-from django.http import JsonResponse
+
+
 from django.views import View
 import json
-from .models import Paciente, Notificacao
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 class ChamarPacienteView(LoginRequiredMixin, View):
@@ -34,7 +33,7 @@ class ChamarPacienteView(LoginRequiredMixin, View):
                 except Paciente.DoesNotExist:
                     return JsonResponse({"success": False, "message": "Paciente não encontrado."})
 
-                if paciente.usuario_cadastrador != request.user:
+                if paciente.usuario_cadastrador == request.user :
                     return JsonResponse({"success": False, "message": "Você não tem permissão para chamar esse paciente."})
 
                 mensagem = f'O médico está chamando o paciente {paciente.nome}.'
