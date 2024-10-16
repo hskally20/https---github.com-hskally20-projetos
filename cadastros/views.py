@@ -33,7 +33,7 @@ class ChamarPacienteView(LoginRequiredMixin, View):
                 except Paciente.DoesNotExist:
                     return JsonResponse({"success": False, "message": "Paciente não encontrado."})
 
-                if paciente.usuario_cadastrador == request.user :
+                 if paciente.usuario_cadastrador == request.user : #or Paciente.usuario_cadastrador group_required == Paciente
                     return JsonResponse({"success": False, "message": "Você não tem permissão para chamar esse paciente."})
 
                 mensagem = f'O médico está chamando o paciente {paciente.nome}.'
