@@ -4,7 +4,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from braces.views import GroupRequiredMixin
 from django.urls import reverse_lazy
-from .models import Hospital, Medico, Paciente, Cronograma, Consulta, Comentario, Triagem, Notificacao
+from .models import Hospital, Medico, Paciente, Cronograma, Consulta, Comentario, Triagem, Notificacao , Prontuario
 from django.http import JsonResponse
 from django.template.loader import render_to_string
 from django.shortcuts import render
@@ -33,7 +33,7 @@ class ChamarPacienteView(LoginRequiredMixin, View):
                 except Paciente.DoesNotExist:
                     return JsonResponse({"success": False, "message": "Paciente não encontrado."})
 
-                 if paciente.usuario_cadastrador == request.user : #or Paciente.usuario_cadastrador group_required == Paciente
+                if paciente.usuario_cadastrador == request.user : 
                     return JsonResponse({"success": False, "message": "Você não tem permissão para chamar esse paciente."})
 
                 mensagem = f'O médico está chamando o paciente {paciente.nome}.'
@@ -94,11 +94,11 @@ class PacienteCreate(GroupRequiredMixin, CreateView):
     group_required = u'Paciente'
     login_url = reverse_lazy('login')
     model = Paciente
-    fields = ['telefone', 'nome', 'numero_sus', 'hospital', 'doença_cronica', 'sintomas', 'idade', 'usuario_cadastrador']
+    fields = ['telefone', 'nome', 'numero_sus', 'hospital', 'doença_cronica', 'sintomas', 'idade', 'usuario_cadastrador', 'cpf', 'descricao']
     template_name = 'form.html'
     success_url = reverse_lazy('Listar-paciente')
 
-    def form_valid(self, form):
+    def form_valid(self, form):        
         if form.instance.idade < 59:
             form.instance.descricao = 'comun'
             if form.instance.doença_cronica == '' or form.instance.doença_cronica is None:
@@ -121,7 +121,7 @@ class TriagemCreate(GroupRequiredMixin, CreateView):
     group_required = u'Medico'
     login_url = reverse_lazy('login')
     model = Triagem
-    fields = ['data', 'horario', 'pressao', 'hospital', 'medico', 'paciente']
+    fields = ['paciente', 'data', 'medico', 'hospital', 'horario', 'pressao', 'temperatura', 'peso', 'glicose']
     template_name = 'form.html'
     success_url = reverse_lazy('Listar-triagem')
 
@@ -189,7 +189,7 @@ class PacienteUpdate(GroupRequiredMixin, UpdateView):
 class TriagemUpdate(GroupRequiredMixin, UpdateView):
     group_required = u"Medico"
     model = Triagem
-    fields = ['paciente', 'data', 'medico', 'hospital', 'horario', 'pressao']
+    fields = ['paciente', 'data', 'medico', 'hospital', 'horario', 'pressao', 'temperatura', 'peso', 'glicose']
     template_name = 'form.html'
     success_url = reverse_lazy('listar-triagem')
 
@@ -203,6 +203,22 @@ class TriagemUpdate(GroupRequiredMixin, UpdateView):
         context['conteudo'] = 'Preencha todos os campos'
         return context
 
+
+class TriagemDelete(GroupRequiredMixin, DeleteView):
+    group_required = u'Medico'
+    login_url = reverse_lazy('login')
+    model = Triagem
+    template_name = 'form-excluir.html'
+    success_url = reverse_lazy('Listar-triagem')
+
+    def get_object(self, query=None):
+        self.object = Triagem.objects.get(pk=self.kwargs['pk'], usuario=self.request.user)
+        return self.object
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context['Titulo'] = 'Excluir Triagem'
+        return context
 
 # Delete
 class HospitalDelete(GroupRequiredMixin, DeleteView):
@@ -273,6 +289,20 @@ class HospitalList(GroupRequiredMixin, ListView):
             hospital = Hospital.objects.all()
         return hospital
 
+class TriagemList(GroupRequiredMixin , ListView):
+    group_required = u'Medico'
+    login_url = reverse_lazy('login')
+    model = Triagem
+    template_name = 'listas/triagem.html'
+    paginate_by = 5
+
+    def get_queryset(self):
+        nome = self.request.GET.get('nome')
+        if nome:
+            triagem = Triagem.objects.filter(paciente__nome__icontains=nome)
+        else:
+            triagem = Triagem.objects.all()
+        return triagem
 
 class MedicoList(GroupRequiredMixin, ListView):
     group_required = u'Medico'
@@ -419,7 +449,7 @@ class CronogramaList(ListView):
 class ConsultaCreate(CreateView):
     login_url = reverse_lazy('login')
     model = Consulta
-    fields = ['paciente', 'data', 'medico', 'hospital', 'horario']
+    fields = ['paciente', 'data', 'medico', 'hospital']
     template_name = 'form.html'
     success_url = reverse_lazy('Listar-consulta')
 
@@ -508,9 +538,52 @@ class ComentarioCreate(CreateView):
         context['conteudo'] = 'Dê uma nota de 0 a 100'
         return context
 
+class ProntuarioCreate(GroupRequiredMixin, CreateView):
+    group_required = u'Medico'
+    login_url = reverse_lazy('login')
+    model = Prontuario
+    fields = ['remedio', 'diagnostico', 'recomendacoes']
+    template_name = 'prontuario.html'
+    success_url = reverse_lazy('Listar-prontuario')
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context['Titulo'] = 'Criar Pronturio'
+        return context
+
+    def form_valid(self, form):
+        form.instance.usuario = self.request.user
+        return super().form_valid(form)
+class ProntuarioUpdate(GroupRequiredMixin, UpdateView):
+    group_required = u'Medico'
+    login_url = reverse_lazy('login')
+    model = Prontuario
+    fields = ['remedio', 'diagnostico', 'recomendacoes']
+    template_name = 'prontuario.html'
+    success_url = reverse_lazy('Listar-prontuario')
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context['Titulo'] = 'Atualizar Prontuario'
+        return context
+
+    def form_valid(self, form):
+        form.instance.usuario = self.request.user
+        return super().form_valid(form)
+    
+class ProntuarioDelete(GroupRequiredMixin , DeleteView):
+    group_required = u'Medico'
+    login_url = reverse_lazy('login')
+    model = Prontuario
+    template_name = 'form-excluir.html'
+    success_url = reverse_lazy('Listar-prontuario')
+class ProntuarioList(GroupRequiredMixin, ListView):
+    group_required = u'Medico'
+    model = Prontuario
+    template_name = 'listas/prontuario.html'
+    paginate_by = 5
 
 class ComentarioList(ListView):
     model = Comentario
     template_name = 'listas/comentario.html'
     paginate_by = 5
-

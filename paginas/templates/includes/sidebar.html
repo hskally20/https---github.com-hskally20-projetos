@@ -45,10 +45,12 @@
                         <a class="dropdown-item"  href="{% url 'cadastrar-medico' %}"> cadastrar medico  </a>
                         <a class="dropdown-item"  href="{% url 'cadastrar-cronograma' %}"> cadastrar cronograma</a>
                         <a class="dropdown-item" href="{% url 'cadastrar-paciente' %}" > cadastrar pacientes</a>
+                        <a class="dropdown-item" href="{% url 'cadastrar-triagem' %}" > realizar triagem</a>
             
                     {% elif group.name == 'Medico'  %}
                         <a class="dropdown-item"  href="{% url 'cadastrar-cronograma' %}"> cadastrar cronograma</a>
                         <a class="dropdown-item" href="{% url 'cadastrar-paciente' %}" > cadastrar pacientes</a>
+                        <a class="dropdown-item" href="{% url 'cadastrar-triagem' %}" > cadastrar pacientes</a>
             
                     {% elif group.name == 'Paciente' %}
                        <a class="dropdown-item" href="{% url 'cadastrar-paciente' %}" > cadastra pacientes </a>
@@ -75,9 +77,11 @@
                       <a class="dropdown-item"  href="{% url 'listar-hospital' %}">  hospitais cadastrados </a>
                       <a class="dropdown-item"  href="{% url 'listar-medico' %}">  medico cadastrados </a>
                       <a class="dropdown-item"  href="{% url 'Listar-consulta' %}"> consultas agendadas  </a>
+                      <a class="dropdown-item" href="{% url 'Listar-triagem' %}" > triagems feitas </a>
                     {% elif group.name == 'Medico'  %}
                       <a class="dropdown-item"  href="{% url 'Listar-paciente' %}">  pacientes cadastrados </a>
                       <a class="dropdown-item"  href="{% url 'Listar-consulta' %}"> consultas agendadas  </a>
+                      <a class="dropdown-item" href="{% url 'Listar-triagem' %}" > triagems feitas </a>
                     {% elif group.name == 'Paciente' %}
                       <a class="dropdown-item"  href="{% url 'Listar-consulta' %}"> consultas agendadas  </a>
                       <a class="dropdown-item"  href="{% url 'Listar-paciente' %}">  pacientes cadastrados </a> 

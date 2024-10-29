@@ -22,20 +22,29 @@
 
             <table class="table table-striped">
                 <tr>
-                    <th>data</th>
+                    <th>hospital</th>
                     <th>horário</th>
                     <th>pressão</th>
                     <th>médico</th>
                     <th>paciente</th>
+                    <th>data</th>
+                    <th>temperatura do paciente</th>
+                    <th>peso</th>
+                    <th>nivel de glicose</th>
+                    <th>Opções</th>
                 </tr>
 
                 {% for triagem in object_list %}
                 <tr>
-                    <td>{{ triagem.data }}</td>
+                    <td>{{ triagem.hopital }}</td>
                     <td>{{ triagem.horario }}</td>
                     <td>{{ triagem.pressao }}</td>
                     <td>{{ triagem.medico }}</td> 
                     <td>{{ triagem.paciente }}</td>
+                    <td>{{ triagem.data }}</td>
+                    <td>{{ triagem.temperatura }}</td>
+                    <td>{{ triagem.peso }}</td>
+                    <td>{{ triagem.glicose }}</td>
                     <td>
                         <a href="{%  url 'editar-triagem' triagem.pk %}" class="btn btn-warning btn-sm" title="Editar">Editar</a>
                         <a href="{% url 'excluir-triagem' triagem.pk %}" class="btn btn-danger btn-sm" title="Excluir">Excluir</a>

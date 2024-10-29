@@ -29,6 +29,10 @@
                     <th>Comun / Preferencial</th>
                     <th>Idade</th>
                     <th>Sintomas</th>
+                    <th>cpf</th>
+                    <th> numero do sus</th>
+                    <th>telefone</th>
+                    <th>doença cronica</th>
                     <th>Opções</th>
                     <th>Ações</th>
                 </tr>
@@ -39,6 +43,10 @@
                     <td>{{ paciente.descricao }}</td>
                     <td>{{ paciente.idade }}</td>
                     <td>{{ paciente.sintomas }}</td>
+                    <td>{{ paciente.cpf }}</td>
+                    <td>{{ paciente.numero_sus}}</td>
+                    <td>{{ paciente.telefone }}</td>
+                    <td>{{ paciente.doença_cronica }}</td>
                     <td>
                         <a href="{% url 'editar-paciente' paciente.pk %}" class="btn btn-warning btn-sm" title="Editar">Editar</a>
                         <a href="{% url 'excluir-paciente' paciente.pk %}" class="btn btn-danger btn-sm" title="Excluir">Excluir</a>
