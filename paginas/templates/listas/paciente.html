@@ -34,7 +34,8 @@
                     <th>telefone</th>
                     <th>doença cronica</th>
                     <th>Opções</th>
-                    <th>Ações</th>
+                    <th>chamar paciente </th>
+                    <th> ver prontuario </th>
                 </tr>
 
                 {% for paciente in object_list %}
@@ -58,6 +59,10 @@
                             Chamar Paciente
                         </button>
                     </td>
+                    <td>
+                        <a href="{% url 'cadastrar-prontuario' paciente.pk %}" class="btn btn-info btn-sm" title="Ver Prontuário">Prontuário</a>
+                    </td>
+                    
                 </tr>
                 {% empty %}
                 <tr>
