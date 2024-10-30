@@ -554,6 +554,20 @@ class ProntuarioCreate(GroupRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.usuario = self.request.user
         return super().form_valid(form)
+    def get(self, request, paciente_id=None, *args, **kwargs):
+        if paciente_id:  # Se o ID do paciente for fornecido
+            paciente = get_object_or_404(Paciente, id=paciente_id)
+            prontuario = get_object_or_404(Prontuario, paciente=paciente)
+            context = {
+                'Titulo': 'Prontuário do Paciente',
+                'conteudo': 'Detalhes do prontuário',
+                'paciente': paciente,
+                'prontuario': prontuario,
+            }
+            return render(request, self.template_name, context)
+
+        return super().get(request, *args, **kwargs)  
+    
 class ProntuarioUpdate(GroupRequiredMixin, UpdateView):
     group_required = u'Medico'
     login_url = reverse_lazy('login')
