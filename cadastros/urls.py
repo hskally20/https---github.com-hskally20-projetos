@@ -24,7 +24,7 @@ urlpatterns = [
         name='cadastra-comentario'),
      path('cadastrar/triagem/', TriagemCreate.as_view(),
         name='cadastrar-triagem'),
-    path('cadastrar/prontuario/<int:paciente_id>/', ProntuarioCreate.as_view(),
+    path('cadastrar/prontuario/<int:paciente_pk>/', ProntuarioCreate.as_view(),
         name='cadastrar-prontuario'),
 
 
@@ -46,8 +46,8 @@ urlpatterns = [
     path('editar/triagem/<int:pk>', TriagemUpdate.as_view(),
             name='editar-triagem'),
 
-    path('editar/Prontuario/<int:pk>', ProntuarioUpdate.as_view(),
-            name='editar-triagem'),
+    path('editar/prontuario/<int:pk>', ProntuarioUpdate.as_view(),
+            name='editar-prontuario'),
     
 
     
@@ -63,8 +63,8 @@ urlpatterns = [
         name='excluir-consulta'),
     path('excluir/triagem/<int:pk>',TriagemDelete.as_view(),
         name='excluir-triagem'),
-    path('excluir/Prontuario/<int:pk>',ProntuarioDelete.as_view(),
-        name='excluir-triagem'),
+    path('excluir/prontuario/<int:pk>',ProntuarioDelete.as_view(),
+        name='excluir-prontuario'),
     
     path('listar/hospital/', HospitalList.as_view(),
         name='listar-hospital'),
@@ -83,8 +83,8 @@ urlpatterns = [
    
     path('listar/notificacao/',NotificacaoList.as_view(),
     name='Listar-notificacao'),
-    path('listar/Prontuario/', ProntuarioList.as_view(),
-    name='Listar-Prontuario'),
+    path('listar/prontuarios/', ProntuarioList.as_view(),
+    name='listar-prontuarios'),
     
     path('chamar-paciente/', ChamarPacienteView.as_view(), name='chamar-paciente'),
 

@@ -39,7 +39,7 @@ class Paciente(models.Model):
     usuario_cadastrador = models.ForeignKey(User, related_name='pacientes_cadastrados', on_delete=models.CASCADE)
     
     def __str__(self):
-        return "{} ({})".format(self.nome, self.hospital)
+        return "{} ({})".format(self.nome , self.idade)
 
 
 class Cronograma(models.Model):
@@ -94,9 +94,11 @@ class Notificacao(models.Model):
       return self.mensagem
 class Prontuario(models.Model):
     paciente = models.ForeignKey(Paciente, on_delete=models.PROTECT)  
+    medico = models.ForeignKey(Medico, on_delete=models.PROTECT)
     usuario = models.ForeignKey(User, on_delete=models.PROTECT)
     remedio = models.CharField(verbose_name ='remedio' ,max_length=255)
     diagnostico = models.TextField(verbose_name='diagnostico' , max_length=255)
     recomendacoes = models.TextField(verbose_name = 'recomendacoes', max_length=255 ,null=True, blank=True)
     def __str__(self):
-      return print('prontuario')
+      def __str__(self):
+        return f'Prontuário de {self.usuario.username}' 

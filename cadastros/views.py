@@ -1,19 +1,13 @@
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.decorators import login_required
 from braces.views import GroupRequiredMixin
 from django.urls import reverse_lazy
 from .models import Hospital, Medico, Paciente, Cronograma, Consulta, Comentario, Triagem, Notificacao , Prontuario
 from django.http import JsonResponse
-from django.template.loader import render_to_string
 from django.shortcuts import render
-from asgiref.sync import async_to_sync
-from channels.layers import get_channel_layer
 from django.shortcuts import render, get_object_or_404
-
-
-
+from django.views.generic import DetailView
 from django.views import View
 import json
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -542,9 +536,9 @@ class ProntuarioCreate(GroupRequiredMixin, CreateView):
     group_required = u'Medico'
     login_url = reverse_lazy('login')
     model = Prontuario
-    fields = ['remedio', 'diagnostico', 'recomendacoes']
-    template_name = 'prontuario.html'
-    success_url = reverse_lazy('Listar-prontuario')
+    fields = ['remedio', 'diagnostico', 'recomendacoes','paciente','usuario']
+    template_name = 'form2.html'
+    success_url = reverse_lazy('listar-prontuarios')
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
@@ -552,28 +546,50 @@ class ProntuarioCreate(GroupRequiredMixin, CreateView):
         return context
 
     def form_valid(self, form):
-        form.instance.usuario = self.request.user
-        return super().form_valid(form)
-    def get(self, request, paciente_id=None, *args, **kwargs):
-        if paciente_id:  # Se o ID do paciente for fornecido
-            paciente = get_object_or_404(Paciente, id=paciente_id)
-            prontuario = get_object_or_404(Prontuario, paciente=paciente)
-            context = {
-                'Titulo': 'Prontuário do Paciente',
-                'conteudo': 'Detalhes do prontuário',
-                'paciente': paciente,
-                'prontuario': prontuario,
-            }
-            return render(request, self.template_name, context)
+            form.instance.usuario = self.request.user
+            paciente_id = self.kwargs.get('paciente_id')
+            form.instance.paciente = get_object_or_404(Paciente, id=paciente_id)  # Certifique-se de que está associando o paciente
+            return super().form_valid(form)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        paciente_pk = self.kwargs['paciente_pk']
+        paciente = get_object_or_404(Paciente, id=paciente_pk)
+        context['paciente'] = paciente
+        context['consultas'] = Consulta.objects.filter(paciente=paciente)
+        context['triagens'] = Triagem.objects.filter(paciente=paciente)
+        context['Titulo'] = 'Criar Prontuário'
+        return context
 
-        return super().get(request, *args, **kwargs)  
+    def form_valid(self, form):
+        paciente_pk = self.kwargs['paciente_pk']
+        print(f"Paciente ID recebido: {paciente_pk}")
+        paciente = get_object_or_404(Paciente, id=paciente_pk)
+        form.instance.paciente = paciente
+        return super().form_valid(form)
+
     
+class ConsultaDetailView(DetailView):
+    model = Consulta
+    template_name = 'form2.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        consulta = self.object  # A consulta que está sendo visualizada
+        context['consulta'] = consulta
+        
+        # Obtenha a triagem associada
+        context['triagem'] = Triagem.objects.get(consulta=consulta)  # Ajuste conforme necessário
+        
+        context['Titulo'] = 'Detalhes da Consulta'
+        context['conteudo'] = 'Informações sobre a consulta e triagem.'
+        return context
+
 class ProntuarioUpdate(GroupRequiredMixin, UpdateView):
     group_required = u'Medico'
     login_url = reverse_lazy('login')
     model = Prontuario
     fields = ['remedio', 'diagnostico', 'recomendacoes']
-    template_name = 'prontuario.html'
+    template_name = 'form2.html'
     success_url = reverse_lazy('Listar-prontuario')
 
     def get_context_data(self, *args, **kwargs):
@@ -594,7 +610,7 @@ class ProntuarioDelete(GroupRequiredMixin , DeleteView):
 class ProntuarioList(GroupRequiredMixin, ListView):
     group_required = u'Medico'
     model = Prontuario
-    template_name = 'listas/prontuario.html'
+    template_name = 'listas/prontuarios.html'
     paginate_by = 5
 
 class ComentarioList(ListView):
