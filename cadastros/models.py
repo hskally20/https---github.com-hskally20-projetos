@@ -93,6 +93,7 @@ class Notificacao(models.Model):
     def __str__(self):
       return self.mensagem
 class Prontuario(models.Model):
+    paciente = models.ForeignKey(Paciente, on_delete=models.PROTECT)  
     usuario = models.ForeignKey(User, on_delete=models.PROTECT)
     remedio = models.CharField(verbose_name ='remedio' ,max_length=255)
     diagnostico = models.TextField(verbose_name='diagnostico' , max_length=255)
