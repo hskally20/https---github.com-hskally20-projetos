@@ -3,7 +3,7 @@ from .views import HospitalCreate, MedicoCreate , PacienteCreate , CronogramaCre
 from .views import  HospitalUpdate, MedicoUpdate , PacienteUpdate,CronogramaUpdate , ConsultaUpdate ,Consulta2Update, TriagemUpdate , ProntuarioUpdate
 from .views import  HospitalDelete,MedicoDelete , PacienteDelete , CronogramaDelete, ConsultaDelete, TriagemDelete , ProntuarioDelete
 from .views import  HospitalList,MedicoList ,PacienteList ,CronogramaList ,ConsultaList,ComentarioList,TriagemList, NotificacaoList ,ProntuarioList
-from .views import ChamarPacienteView
+from .views import ChamarPacienteView 
 
 
 
@@ -24,8 +24,9 @@ urlpatterns = [
         name='cadastra-comentario'),
      path('cadastrar/triagem/', TriagemCreate.as_view(),
         name='cadastrar-triagem'),
-    path('cadastrar/prontuario/', ProntuarioCreate.as_view(),
+    path('cadastrar/prontuario/<int:paciente_id>/', ProntuarioCreate.as_view(),
         name='cadastrar-prontuario'),
+
 
     path('editar/hospital/<int:pk>', HospitalUpdate.as_view(),
         name='editar-hospital'),
