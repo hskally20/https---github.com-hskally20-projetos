@@ -2,12 +2,12 @@
 {% load static %}
 
 {% block titulo %}
-<title>Prontuários</title>
+<title>Atendimentos</title>
 {% endblock %}
 
 {% block conteudo %}
 <div class="container">
-    <h3>Lista de Prontuários</h3>
+    <h3>Lista de Atendimentos</h3>
     
     <hr>
 
@@ -15,7 +15,7 @@
         <form action="?" method="GET">
             <input type="text" name="paciente" class="p-1 border" value="{{ request.GET.paciente }}" placeholder="Buscar por paciente">
             <button type="submit" class="btn btn-success">Buscar</button>
-            <a href="{% url 'listar-prontuarios' %}">Limpar</a>
+            <a href="{% url 'listar-atendimentos' %}">Limpar</a>
         </form>
 
         <hr>
@@ -30,22 +30,22 @@
                 <th>Opções</th>
             </tr>
 
-            {% for prontuario in object_list %}
+            {% for atendimento in object_list %}
             <tr>
-                <td>{{ prontuario.paciente.nome }}</td>
-                <td>{{ prontuario.medico.nome }}</td>
-                <td>{{ prontuario.remedio }}</td>
-                <td>{{ prontuario.recomendacoes }}</td>
-                <td>{{ prontuario.diagnostico }}</td>
+                <td>{{ atendimento.paciente.nome }}</td>
+                <td>{{ atendimento.medico.nome }}</td>
+                <td>{{ atendimento.remedio }}</td>
+                <td>{{ atendimento.recomendacoes }}</td>
+                <td>{{ atendimento.diagnostico }}</td>
                 <td>
-                    <a href="{% url 'editar-prontuario' prontuario.pk %}" class="btn btn-warning btn-sm" title="Editar">Editar</a>
-                    <a href="{% url 'excluir-prontuario' prontuario.pk %}" class="btn btn-danger btn-sm" title="Excluir">Excluir</a>
+                    <a href="{% url 'editar-atendimento' atendimento.pk %}" class="btn btn-warning btn-sm" title="Editar">Editar</a>
+                    <a href="{% url 'excluir-atendimento' atendimento.pk %}" class="btn btn-danger btn-sm" title="Excluir">Excluir</a>
                 </td>
             </tr>
 
             {% empty %}
             <tr>
-                <td colspan="5">Nenhum prontuário registrado.</td>
+                <td colspan="5">Nenhum atendimento registrado.</td>
             </tr>
             {% endfor %}
         </table>
@@ -68,3 +68,4 @@
     </div>
 </div>
 {% endblock %}
+

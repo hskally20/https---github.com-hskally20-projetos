@@ -1,8 +1,8 @@
 from django.urls import path
-from .views import HospitalCreate, MedicoCreate , PacienteCreate , CronogramaCreate , ConsultaCreate, ComentarioCreate , TriagemCreate , ProntuarioCreate
-from .views import  HospitalUpdate, MedicoUpdate , PacienteUpdate,CronogramaUpdate , ConsultaUpdate ,Consulta2Update, TriagemUpdate , ProntuarioUpdate
-from .views import  HospitalDelete,MedicoDelete , PacienteDelete , CronogramaDelete, ConsultaDelete, TriagemDelete , ProntuarioDelete
-from .views import  HospitalList,MedicoList ,PacienteList ,CronogramaList ,ConsultaList,ComentarioList,TriagemList, NotificacaoList ,ProntuarioList
+from .views import HospitalCreate, MedicoCreate , PacienteCreate , CronogramaCreate , ConsultaCreate, ComentarioCreate , TriagemCreate , AtendimentoCreate
+from .views import  HospitalUpdate, MedicoUpdate , PacienteUpdate,CronogramaUpdate , ConsultaUpdate ,Consulta2Update, TriagemUpdate , AtendimentoUpdate
+from .views import  HospitalDelete,MedicoDelete , PacienteDelete , CronogramaDelete, ConsultaDelete, TriagemDelete , AtendimentoDelete
+from .views import  HospitalList,MedicoList ,PacienteList ,CronogramaList ,ConsultaList,ComentarioList,TriagemList, NotificacaoList ,AtendimentoList
 from .views import ChamarPacienteView 
 
 
@@ -24,8 +24,8 @@ urlpatterns = [
         name='cadastra-comentario'),
      path('cadastrar/triagem/', TriagemCreate.as_view(),
         name='cadastrar-triagem'),
-    path('cadastrar/prontuario/<int:paciente_pk>/', ProntuarioCreate.as_view(),
-        name='cadastrar-prontuario'),
+    path('cadastrar/atendimento/<int:paciente_pk>/', AtendimentoCreate.as_view(),
+        name='cadastrar-atendimento'),
 
 
     path('editar/hospital/<int:pk>', HospitalUpdate.as_view(),
@@ -46,8 +46,8 @@ urlpatterns = [
     path('editar/triagem/<int:pk>', TriagemUpdate.as_view(),
             name='editar-triagem'),
 
-    path('editar/prontuario/<int:pk>', ProntuarioUpdate.as_view(),
-            name='editar-prontuario'),
+    path('editar/atendimento/<int:pk>', AtendimentoUpdate.as_view(),
+            name='editar-atendimento'),
     
 
     
@@ -63,8 +63,8 @@ urlpatterns = [
         name='excluir-consulta'),
     path('excluir/triagem/<int:pk>',TriagemDelete.as_view(),
         name='excluir-triagem'),
-    path('excluir/prontuario/<int:pk>',ProntuarioDelete.as_view(),
-        name='excluir-prontuario'),
+    path('excluir/atendimento/<int:pk>',AtendimentoDelete.as_view(),
+        name='excluir-atendimento'),
     
     path('listar/hospital/', HospitalList.as_view(),
         name='listar-hospital'),
@@ -83,10 +83,11 @@ urlpatterns = [
    
     path('listar/notificacao/',NotificacaoList.as_view(),
     name='Listar-notificacao'),
-    path('listar/prontuarios/', ProntuarioList.as_view(),
-    name='listar-prontuarios'),
+    path('listar/atendimentos/', AtendimentoList.as_view(),
+    name='listar-atendimentos'),
     
     path('chamar-paciente/', ChamarPacienteView.as_view(), name='chamar-paciente'),
 
 
 ]
+

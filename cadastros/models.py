@@ -20,7 +20,7 @@ class Medico(models.Model):
     hospital = models.ForeignKey(Hospital, on_delete=models.PROTECT)
 
     def __str__(self):
-        return "{} ({})".format(self. especificacao, self.hospital.nome)
+        return "{} ({})".format( self.nome, self. especificacao)
 
 class Paciente(models.Model):
     usuario  = models.ForeignKey(User, on_delete=models.PROTECT)
@@ -39,7 +39,7 @@ class Paciente(models.Model):
     usuario_cadastrador = models.ForeignKey(User, related_name='pacientes_cadastrados', on_delete=models.CASCADE)
     
     def __str__(self):
-        return "{} ({})".format(self.nome , self.idade)
+        return "{} ({})".format(self.nome , self.sintomas)
 
 
 class Cronograma(models.Model):
@@ -92,7 +92,7 @@ class Notificacao(models.Model):
     data = models.DateTimeField(auto_now_add=True)
     def __str__(self):
       return self.mensagem
-class Prontuario(models.Model):
+class Atendimento(models.Model):
     paciente = models.ForeignKey(Paciente, on_delete=models.PROTECT)  
     medico = models.ForeignKey(Medico, on_delete=models.PROTECT)
     usuario = models.ForeignKey(User, on_delete=models.PROTECT)

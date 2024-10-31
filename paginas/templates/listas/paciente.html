@@ -34,7 +34,6 @@
                     <th>telefone</th>
                     <th>doença cronica</th>
                     <th>Opções</th>
-                    <th>chamar paciente </th>
                     <th> ver prontuario </th>
                 </tr>
 
@@ -52,17 +51,7 @@
                         <a href="{% url 'editar-paciente' paciente.pk %}" class="btn btn-warning btn-sm" title="Editar">Editar</a>
                         <a href="{% url 'excluir-paciente' paciente.pk %}" class="btn btn-danger btn-sm" title="Excluir">Excluir</a>
                     </td>
-                    <td>
-                        <button class="btn btn-primary chamar-paciente" 
-                                data-paciente-id="{{ paciente.id }}" 
-                                data-csrf="{{ csrf_token }}">
-                            Chamar Paciente
-                        </button>
-                    </td>
-                    <td>
-                        <a href="{% url 'cadastrar-prontuario' paciente.pk %}" class="btn btn-info btn-sm" title="Ver Prontuário">Prontuário</a>
-                    </td>
-                    
+                   
                 </tr>
                 {% empty %}
                 <tr>
@@ -93,33 +82,5 @@
 {% endblock %}
 
 {% block scripts %}
-<script>
-document.querySelectorAll('.chamar-paciente').forEach(function(button) {
-button.addEventListener('click', function() {
-    const pacienteId = this.getAttribute('data-paciente-id');  // Obtém o ID do paciente
-    const csrftoken = this.getAttribute('data-csrf');  // Obtém o CSRF token
 
-    // Envia o pedido AJAX para chamar o paciente
-    fetch("{% url 'chamar-paciente' %}", {
-    method: "POST",
-    headers: {
-        "Content-Type": "application/json",
-        "X-CSRFToken": csrftoken,
-        "X-Requested-With": "XMLHttpRequest"  // Verifique se este cabeçalho está sendo realmente enviado
-    },
-    body: JSON.stringify({ paciente_id: pacienteId })
-})
-
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            alert('Notificação enviada com sucesso!');
-            document.getElementById('mensagem').textContent = data.message;
-        } else {
-            alert('Erro: ' + data.message);
-        }
-    });
-});
-});
-</script>
 {% endblock %}

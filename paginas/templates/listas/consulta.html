@@ -25,6 +25,7 @@
                     <th>hospital</th>
                     <th>horario</th>
                     <th>opções</th>
+                    <th>chamar paciente</th>
                     <th>status</th>
                     {% for group in request.user.groups.all %}
                      {% if group.name == 'Medico' or group.name == 'Admin' %}
@@ -43,6 +44,13 @@
                     <td>
                             <a href="{% url 'editar-consulta' consulta.pk %}" class="btn btn-warning btn-sm" title="Editar">Editar</a> 
                             <a href="{% url 'excluir-consulta' consulta.pk %}" class="btn btn-danger btn-sm" title="Excluir">Excluir</a>
+                    </td>
+                    <td>
+                        <button class="btn btn-primary chamar-paciente" 
+                                data-paciente-id="{{ consulta.paciente.id }}" 
+                                data-csrf="{{ csrf_token }}">
+                            Chamar Paciente
+                        </button>
                     </td>
                     <td>{{ consulta.status }}</td>
                     <td>
@@ -75,6 +83,7 @@
             <a  href="{% url 'cadastrar-consulta' %}"><button class="btn btn-primary btn-sm" >cadastra nova consulta </button></a> 
         </div>
     </div>
-          
+   
+        <link rel="stylesheet" href="{% static 'css/meu.css' %}">
 {% endblock %}
   

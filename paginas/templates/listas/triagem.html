@@ -32,6 +32,7 @@
                     <th>peso</th>
                     <th>nivel de glicose</th>
                     <th>Opções</th>
+                    <th>atendimento </th>
                 </tr>
 
                 {% for triagem in object_list %}
@@ -48,6 +49,9 @@
                     <td>
                         <a href="{%  url 'editar-triagem' triagem.pk %}" class="btn btn-warning btn-sm" title="Editar">Editar</a>
                         <a href="{% url 'excluir-triagem' triagem.pk %}" class="btn btn-danger btn-sm" title="Excluir">Excluir</a>
+                    </td>
+                    <td>
+                        <a href="{% url 'cadastrar-atendimento' triagem.paciente.pk %}" class="btn btn-info btn-sm" title="Ver Prontuário"> realizar atendimento</a>
                     </td>
                 </tr>
 
@@ -76,4 +80,5 @@
             <a  href="{% url 'cadastrar-triagem' %}"><button class="btn btn-primary btn-sm" >cadastrar nova triagem</button></a> 
         </div>
     </div>
+    <link rel="stylesheet" href="{% static 'js/meu.js' %}">
 {% endblock %}
