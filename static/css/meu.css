@@ -36,6 +36,9 @@ body {
     text-align: center;
     height: 200px;
 }
+.card-container {
+    margin-bottom: 20px; /* Espaço entre os cartões */
+}
 
 
 .card {
@@ -69,6 +72,9 @@ body {
 }
 
 .card p {
-    color: #333; /* Cor do texto */
+    color: #ffffff; /* Cor do texto */
     font-size: 14px; /* Tamanho da fonte do texto */
+}
+.badge bg-secondary{
+    background-color: #ffffff;
 }
