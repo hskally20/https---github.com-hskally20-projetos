@@ -51,7 +51,7 @@
                         <a href="{% url 'editar-paciente' paciente.pk %}" class="btn btn-warning btn-sm" title="Editar">Editar</a>
                         <a href="{% url 'excluir-paciente' paciente.pk %}" class="btn btn-danger btn-sm" title="Excluir">Excluir</a>
                     </td>
-                   
+                    <td> <a href="{% url 'prontuario' paciente.pk %}" class="btn btn-warning btn-sm" title="Editar">prontuario</a></td>
                 </tr>
                 {% empty %}
                 <tr>

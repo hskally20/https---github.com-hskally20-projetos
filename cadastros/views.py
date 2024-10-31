@@ -558,7 +558,7 @@ class AtendimentoCreate(GroupRequiredMixin, CreateView):
     group_required = u'Medico'
     login_url = reverse_lazy('login')
     model = Atendimento
-    fields = ['remedio', 'diagnostico', 'recomendacoes','paciente','usuario']
+    fields = ['remedio', 'diagnostico', 'recomendacoes','paciente','usuario','medico']
     template_name = 'form2.html'
     success_url = reverse_lazy('listar-atendimentos')
 
@@ -612,12 +612,12 @@ class AtendimentoUpdate(GroupRequiredMixin, UpdateView):
     model = Atendimento
     fields = ['remedio', 'diagnostico', 'recomendacoes']
     template_name = 'form2.html'
-    success_url = reverse_lazy('Listar-atendimento')
+    success_url = reverse_lazy('listar-atendimentos')
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
         context['Titulo'] = 'Atualizar Atendimento'
-        return context
+        return context  
 
     def form_valid(self, form):
         form.instance.usuario = self.request.user
@@ -628,14 +628,40 @@ class AtendimentoDelete(GroupRequiredMixin , DeleteView):
     login_url = reverse_lazy('login')
     model = Atendimento
     template_name = 'form-excluir.html'
-    success_url = reverse_lazy('Listar-atendimento')
+    success_url = reverse_lazy('listar-atendimentos')
 class AtendimentoList(GroupRequiredMixin, ListView):
     group_required = u'Medico'
     model = Atendimento
-    template_name = 'listas/atendimentos.html'
+    template_name = 'listas/atendimento.html'
     paginate_by = 5
+ 
 
 class ComentarioList(ListView):
     model = Comentario
     template_name = 'listas/comentario.html'
     paginate_by = 5
+    def get_queryset(self):
+        
+        nome = self.request.GET.get('nome')
+        if nome:
+            cronograma = Cronograma.objects.filter(nome__icontains=nome)
+        else:
+            cronograma = Cronograma.objects.all()
+        return cronograma
+def prontuario_view(request, paciente_id):
+    try:
+        paciente = Paciente.objects.get(id=paciente_id)
+    except Paciente.DoesNotExist:
+        raise Http404("Paciente não encontrado")
+    
+    consultas = Consulta.objects.filter(paciente=paciente)
+    triagens = Triagem.objects.filter(paciente=paciente)
+    atendimentos = Atendimento.objects.filter(paciente=paciente)
+
+    context = {
+        'paciente': paciente,
+        'consultas': consultas,
+        'triagens': triagens,
+        'atendimentos': atendimentos,
+    }
+    return render(request, 'prontuario.html', context)

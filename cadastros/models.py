@@ -100,5 +100,5 @@ class Atendimento(models.Model):
     diagnostico = models.TextField(verbose_name='diagnostico' , max_length=255)
     recomendacoes = models.TextField(verbose_name = 'recomendacoes', max_length=255 ,null=True, blank=True)
     def __str__(self):
-      def __str__(self):
-        return f'Prontuário de {self.usuario.username}' 
+        return f'Atendimento de {self.paciente} - {self.medico}'
+
