@@ -3191,7 +3191,7 @@ input[type="button"].btn-block {
   padding: 0.25rem 1.5rem;
   clear: both;
   font-weight: 400;
-  color: #3a3b45;
+  color: #f4f4f7;
   text-align: inherit;
   white-space: nowrap;
   background-color: transparent;
@@ -6491,7 +6491,7 @@ button.bg-dark:focus {
 }
 
 .bg-white {
-  background-color: #fff !important;
+  background-color: #2e59d9 !important;
 }
 
 .bg-transparent {
@@ -10016,7 +10016,7 @@ a:focus {
 }
 
 .text-gray-600 {
-  color: #858796 !important;
+  color: #d1d3e2 !important;
 }
 
 .text-gray-700 {
