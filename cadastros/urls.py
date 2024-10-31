@@ -4,6 +4,7 @@ from .views import  HospitalUpdate, MedicoUpdate , PacienteUpdate,CronogramaUpda
 from .views import  HospitalDelete,MedicoDelete , PacienteDelete , CronogramaDelete, ConsultaDelete, TriagemDelete , AtendimentoDelete
 from .views import  HospitalList,MedicoList ,PacienteList ,CronogramaList ,ConsultaList,ComentarioList,TriagemList, NotificacaoList ,AtendimentoList
 from .views import ChamarPacienteView 
+from .views import manage_groups
 
 
 
@@ -87,7 +88,7 @@ urlpatterns = [
     name='listar-atendimentos'),
     
     path('chamar-paciente/', ChamarPacienteView.as_view(), name='chamar-paciente'),
-
+    path('manage-groups/', manage_groups, name='manage_groups'),
 
 ]
 

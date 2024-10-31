@@ -5,12 +5,48 @@ from braces.views import GroupRequiredMixin
 from django.urls import reverse_lazy
 from .models import Hospital, Medico, Paciente, Cronograma, Consulta, Comentario, Triagem, Notificacao , Atendimento
 from django.http import JsonResponse
-from django.shortcuts import render
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import DetailView
 from django.views import View
 import json
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.models import User, Group
+from django.contrib.auth.decorators import user_passes_test
+
+# Check if the user is an admin
+def admin_required(user):
+    return user.is_superuser
+
+@user_passes_test(admin_required)
+def manage_groups(request):
+    users = User.objects.all()
+
+    # Obtenha os grupos "Paciente", "Medico" e "Admin" (sem criar novos)
+    paciente_group = Group.objects.get(name="Paciente")
+    medico_group = Group.objects.get(name="Medico")
+    admin_group = Group.objects.get(name="Admin")
+
+    if request.method == "POST":
+        user_id = request.POST.get("user_id")
+        group_name = request.POST.get("group_name")
+        user = User.objects.get(id=user_id)
+
+        if group_name == "Medico":
+            user.groups.add(medico_group)
+        elif group_name == "Admin":
+            user.groups.add(admin_group)
+        elif group_name == "Paciente":
+            user.groups.add(paciente_group)
+        elif group_name == "Remover":
+            user.groups.clear()  # Remove de todos os grupos
+
+        return redirect("manage_groups")
+
+    return render(request, "manage_groups.html", {
+        "users": users,
+        "paciente_group": paciente_group,
+        "medico_group": medico_group,
+        "admin_group": admin_group,
+    })
 
 class ChamarPacienteView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
