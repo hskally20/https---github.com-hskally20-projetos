@@ -37,5 +37,5 @@ class UsuarioCreate(CreateView):
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args,**kwargs)
-        context['Titulo'] = 'registra novo usuario '
+        context['Titulo'] = 'Registra Novo Usuario '
         return context
