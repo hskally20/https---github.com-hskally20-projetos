@@ -48,10 +48,10 @@ class Cronograma(models.Model):
     data= models.DateField(verbose_name='data', max_length = 10)
     medico = models.ForeignKey (Medico, on_delete=models.PROTECT)
     hospital = models.ForeignKey(Hospital, on_delete=models.PROTECT)
-    horario= models.CharField( verbose_name="orario" , max_length=15 )
+    horario= models.CharField( verbose_name="Horario" , max_length=15 )
     
     def __str__(self):
-        return "{} ({})".format(self.nome, self.orario)
+        return "{} ({})".format(self.nome, self.Horario)
 
     
 class Consulta(models.Model):

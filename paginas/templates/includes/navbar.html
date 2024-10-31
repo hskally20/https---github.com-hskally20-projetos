@@ -1,4 +1,5 @@
 {% load static %}
+
 <!-- Topbar -->
 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
 
@@ -16,13 +17,10 @@
         <li class="nav-item active">
             <a class="nav-link" href="{% url 'cadastra-comentario' %}"> <strong> Avalie </strong> </a> 
         </li>
+
         {% if user.is_authenticated %}
             <li class="nav-item active">
-                <form id="logout-form" action="{% url 'logout' %}" method="post" style="display: none;">
-                    {% csrf_token %}
-                    <button type="submit">Logout</button>
-                </form>
-                <a class="nav-link" href="#" onclick="document.getElementById('logout-form').submit();"> <b> sair </b> </a>
+                <a class="nav-link" href="#" data-toggle="modal" data-target="#logoutModal"> <b> Sair </b> </a>
             </li>
         {% else %}
             <li class="nav-item active">
@@ -39,7 +37,7 @@
         <li class="nav-item dropdown no-arrow">
             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Usuario:{{ user.get_username }}</span>
+                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Usuário: {{ user.get_username }}</span>
                 <img class="img-profile rounded-circle"
                     src="{% static 'fotos/undraw_profile.svg' %}">
             </a>
@@ -59,16 +57,41 @@
                     Activity Log
                 </a>
                 <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
-                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                    Logout
-                </a>
+                {% if user.is_authenticated %}
+                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal" aria-label="Logout">
+                        <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                        <span>Logout</span>
+                    </a>
+                {% endif %}
             </div>
         </li>
     </ul>
 </nav>
-<div class="container-fluid">
 
+<div class="container-fluid">
     <!-- Page Heading -->
     <h1 class="h3 mb-4 text-gray-800">
 <!-- End of Topbar -->
+
+<!-- Logout Modal -->
+<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Deseja sair?</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">Selecione "sair" abaixo se você deseja sair desta bela página.</div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+                <form id="logout-form" action="{% url 'logout' %}" method="post" style="display: none;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary">Sair</button>
+                </form>
+                <a class="btn btn-primary" href="#" onclick="document.getElementById('logout-form').submit();">Sair</a>
+            </div>
+        </div>
+    </div>
+</div>
