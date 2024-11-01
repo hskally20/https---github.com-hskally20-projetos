@@ -3,7 +3,6 @@
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-
 <!-- Sidebar -->
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
@@ -26,82 +25,76 @@
         </a>
     </li>
 
- <!-- Divider -->
- <hr class="sidebar-divider">
+    <!-- Divider -->
+    <hr class="sidebar-divider">
 
- <!-- Heading -->
- <div class="sidebar-heading">
-     cadastros
- </div>
+    <!-- Heading -->
+    <div class="sidebar-heading">Cadastros</div>
 
- <!-- Nav Item - Pages Collapse Menu -->
- <li class="nav-item">
-     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
-         aria-expanded="true" aria-controls="collapseTwo">
-         <i class="fas fa-notes-medical"></i>
-         <span>Gerenciar Cadastros</span>
-     </a>
-     <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-         <div class="bg-white py-2 collapse-inner rounded">
-             <h6 class="collapse-header">Custom Components:</h6>
-             {% for group in request.user.groups.all %}
-                 {% if   group.name == 'Admin'  %}
-                     <a class="dropdown-item" href="{% url 'cadastrar-hospital' %}" > cadastrar hospitais </a>
-                     <a class="dropdown-item"  href="{% url 'cadastrar-medico' %}"> cadastrar medico  </a>
-                     <a class="dropdown-item"  href="{% url 'cadastrar-cronograma' %}"> cadastrar cronograma</a>
-                     <a class="dropdown-item" href="{% url 'cadastrar-paciente' %}" > cadastrar pacientes</a>
-                     <a class="dropdown-item" href="{% url 'cadastrar-triagem' %}" > realizar triagem</a>
-         
-                 {% elif group.name == 'Medico'  %}
-                     <a class="dropdown-item"  href="{% url 'cadastrar-cronograma' %}"> cadastrar cronograma</a>
-                     <a class="dropdown-item" href="{% url 'cadastrar-paciente' %}" > cadastrar pacientes</a>
-                     <a class="dropdown-item" href="{% url 'cadastrar-triagem' %}" > cadastrar pacientes</a>
-         
-                 {% elif group.name == 'Paciente' %}
-                    <a class="dropdown-item" href="{% url 'cadastrar-paciente' %}" > cadastra pacientes </a>
-                    
-                 {% endif %}
-           {% endfor %}
-           <a class="dropdown-item"  href="{% url 'cadastrar-consulta' %}"> Agenda Consulta </a>
-         </div>
-     </div>
- </li>
-     <li class="nav-item">
-         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
-             aria-expanded="true" aria-controls="collapseUtilities">
-             <i class="fas fa-file-medical"></i>
-             <span> itens Cadastrados</span>
-         </a>
-         <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
-             data-parent="#accordionSidebar">
-             <div class="bg-white py-2 collapse-inner rounded">
-                 <h6 class="collapse-header">Custom Utilities:</h6>
-                 {% for group in request.user.groups.all %}
-                 {% if   group.name == 'Admin'  %}
-                   <a class="dropdown-item"  href="{% url 'Listar-paciente' %}">  Pacientes cadastrados </a>
-                   <a class="dropdown-item"  href="{% url 'listar-hospital' %}">  Hospitais cadastrados </a>
-                   <a class="dropdown-item"  href="{% url 'listar-medico' %}">  Medico cadastrados </a>
-                   <a class="dropdown-item"  href="{% url 'Listar-consulta' %}"> Consultas agendadas  </a>
-                   <a class="dropdown-item" href="{% url 'Listar-triagem' %}" > Triagens feitas </a>
-                   <a class="dropdown-item" href="{% url 'manage_groups' %}" > Adm </a>
-                 {% elif group.name == 'Medico'  %}
-                   <a class="dropdown-item"  href="{% url 'Listar-paciente' %}">  Pacientes cadastrados </a>
-                   <a class="dropdown-item"  href="{% url 'Listar-consulta' %}"> Consultas agendadas  </a>
-                   <a class="dropdown-item" href="{% url 'Listar-triagem' %}" > Triagens feitas </a>
-                 {% elif group.name == 'Paciente' %}
-                   <a class="dropdown-item"  href="{% url 'Listar-consulta' %}"> Consultas agendadas  </a>
-                   <a class="dropdown-item"  href="{% url 'Listar-paciente' %}">  Pacientes cadastrados </a> 
-                 {% endif %}
-                   {% endfor %}
-                 <a class="dropdown-item"  href="{% url 'Listar-cronograma' %}">  Cronogramas  </a>
-             </div>
-         </div>
-     </li>
-    <!-- Sidebar Toggler (Sidebar) -->
+    <!-- Nav Item - Pages Collapse Menu -->
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
+           aria-expanded="true" aria-controls="collapseTwo">
+            <i class="fas fa-notes-medical"></i>
+            <span>Gerenciar Cadastros</span>
+        </a>
+        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <h6 class="collapse-header">Custom Components:</h6>
+                {% for group in request.user.groups.all %}
+                    {% if group.name == 'Admin' %}
+                        <a class="dropdown-item" href="{% url 'cadastrar-hospital' %}">Cadastrar Hospitais</a>
+                        <a class="dropdown-item" href="{% url 'cadastrar-medico' %}">Cadastrar Médico</a>
+                        <a class="dropdown-item" href="{% url 'cadastrar-cronograma' %}">Cadastrar Cronograma</a>
+                        <a class="dropdown-item" href="{% url 'cadastrar-paciente' %}">Cadastrar Pacientes</a>
+                        <a class="dropdown-item" href="{% url 'cadastrar-triagem' %}">Realizar Triagem</a>
+                    {% elif group.name == 'Medico' %}
+                        <a class="dropdown-item" href="{% url 'cadastrar-cronograma' %}">Cadastrar Cronograma</a>
+                        <a class="dropdown-item" href="{% url 'cadastrar-paciente' %}">Cadastrar Pacientes</a>
+                        <a class="dropdown-item" href="{% url 'cadastrar-triagem' %}">Cadastrar Triagem</a>
+                    {% elif group.name == 'Paciente' %}
+                        <a class="dropdown-item" href="{% url 'cadastrar-paciente' %}">Cadastrar Pacientes</a>
+                    {% endif %}
+                {% endfor %}
+                <a class="dropdown-item" href="{% url 'cadastrar-consulta' %}">Agenda Consulta</a>
+            </div>
+        </div>
+    </li>
+
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
+           aria-expanded="true" aria-controls="collapseUtilities">
+            <i class="fas fa-file-medical"></i>
+            <span>Itens Cadastrados</span>
+        </a>
+        <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <h6 class="collapse-header">Custom Utilities:</h6>
+                {% for group in request.user.groups.all %}
+                    {% if group.name == 'Admin' %}
+                        <a class="dropdown-item" href="{% url 'Listar-paciente' %}">Pacientes Cadastrados</a>
+                        <a class="dropdown-item" href="{% url 'listar-hospital' %}">Hospitais Cadastrados</a>
+                        <a class="dropdown-item" href="{% url 'listar-medico' %}">Médicos Cadastrados</a>
+                        <a class="dropdown-item" href="{% url 'Listar-consulta' %}">Consultas Agendadas</a>
+                        <a class="dropdown-item" href="{% url 'Listar-triagem' %}">Triagens Feitas</a>
+                        <a class="dropdown-item" href="{% url 'manage_groups' %}">Adm</a>
+                    {% elif group.name == 'Medico' %}
+                        <a class="dropdown-item" href="{% url 'Listar-paciente' %}">Pacientes Cadastrados</a>
+                        <a class="dropdown-item" href="{% url 'Listar-consulta' %}">Consultas Agendadas</a>
+                        <a class="dropdown-item" href="{% url 'Listar-triagem' %}">Triagens Feitas</a>
+                    {% elif group.name == 'Paciente' %}
+                        <a class="dropdown-item" href="{% url 'Listar-consulta' %}">Consultas Agendadas</a>
+                        <a class="dropdown-item" href="{% url 'Listar-paciente' %}">Pacientes Cadastrados</a>
+                    {% endif %}
+                {% endfor %}
+                <a class="dropdown-item" href="{% url 'Listar-cronograma' %}">Cronogramas</a>
+            </div>
+        </div>
+    </li>
+
+    <!-- Sidebar Toggler -->
     <div class="text-center d-none d-md-inline">
-        <button class="rounded-circle border-0" id="sidebarToggle">
-            <i class="fas fa-angle-left"></i>
-        </button>
+        <button class="rounded-circle border-0" id="sidebarToggle"></button>
     </div>
 </ul>
 <!-- End of Sidebar -->
