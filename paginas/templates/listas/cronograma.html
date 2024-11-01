@@ -29,16 +29,18 @@
                 <th>Medico</th>
                 <th>Hospital</th>
                 <th>Horario</th>
+                <th>Paciente</th>
                 <th>Opções</th>
             </tr>
 
         {% for cronograma in object_list %}
             <tr>
-                <td>{{ cronograma.Nome }}</td>
-                <td>{{ cronograma.Data}}</td>
-                <td>{{ cronograma.Medico}}</td>
-                <td>{{ cronograma.Hospital}}</td>
-                <td>{{ cronograma.Horario}}</td>
+                <td>{{ cronograma.nome }}</td>
+                <td>{{ cronograma.data}}</td>
+                <td>{{ cronograma.medico }}</td>
+                <td>{{ cronograma.hospital}}</td>
+                <td>{{ cronograma.horario}}</td>
+                <td>{{ cronograma.paciente.nome}}</td>
                 <td>
                     <a href="{% url 'editar-cronograma' cronograma.pk %}" class="btn btn-warning btn-sm" title="Editar">Editar</a>
                     <a href="{% url 'excluir-cronograma' cronograma.pk %}" class="btn btn-danger btn-sm" title="Excluir">Execluir</a>

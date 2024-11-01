@@ -66,9 +66,6 @@ class ChamarPacienteView(LoginRequiredMixin, View):
                 except Paciente.DoesNotExist:
                     return JsonResponse({"success": False, "message": "Paciente não encontrado."})
 
-                if paciente.usuario_cadastrador == request.user : 
-                    return JsonResponse({"success": False, "message": "Você não tem permissão para chamar esse paciente."})
-
                 mensagem = f'O médico está chamando o paciente {paciente.nome}.'
 
                 try:
@@ -410,7 +407,7 @@ class CronogramaCreate(GroupRequiredMixin, CreateView):
     group_required = u"Medico"
     login_url = reverse_lazy('login')
     model = Cronograma
-    fields = ['nome', 'data', 'medico', 'hospital', 'horario']
+    fields = ['nome', 'data', 'medico', 'hospital', 'Horario',]
     template_name = 'form.html'
     success_url = reverse_lazy('Listar-cronograma')
 
@@ -439,7 +436,7 @@ class CronogramaUpdate(GroupRequiredMixin, UpdateView):
     group_required = u"Medico"
     login_url = reverse_lazy('login')
     model = Cronograma
-    fields = ['paciente', 'data', 'medico', 'hospital', 'horario', 'pressao']
+    fields = [ 'data', 'medico', 'hospital', 'horario']
     template_name = 'form.html'
     success_url = reverse_lazy('Listar-cronograma')
 
@@ -493,7 +490,7 @@ class ConsultaDelete(DeleteView):
 
 class ConsultaUpdate(UpdateView):
     model = Consulta
-    fields = ['paciente', 'data', 'medico', 'hospital', 'horario']
+    fields = ['paciente', 'data', 'medico', 'hospital', ]
     template_name = 'form.html'
     success_url = reverse_lazy('Listar-consulta')
 
@@ -634,20 +631,26 @@ class AtendimentoList(GroupRequiredMixin, ListView):
     model = Atendimento
     template_name = 'listas/atendimento.html'
     paginate_by = 5
- 
+
+    def get_queryset(self):
+        nome = self.request.GET.get('nome')
+        if nome:
+            atendimento = Atendimento.objects.filter(paciente__nome__icontains=nome)
+        else:
+            atendimento = Atendimento.objects.all()
+        return atendimento
 
 class ComentarioList(ListView):
     model = Comentario
     template_name = 'listas/comentario.html'
     paginate_by = 5
     def get_queryset(self):
-        
         nome = self.request.GET.get('nome')
         if nome:
-            cronograma = Cronograma.objects.filter(nome__icontains=nome)
+            comentario = Comentario.objects.filter(comentario__icontains=nome)
         else:
-            cronograma = Cronograma.objects.all()
-        return cronograma
+            comentario = Comentario.objects.all()
+        return comentario
 def prontuario_view(request, paciente_id):
     try:
         paciente = Paciente.objects.get(id=paciente_id)
