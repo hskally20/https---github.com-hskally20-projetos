@@ -7,7 +7,7 @@
 
 {% block conteudo %}
     <div class="container">
-        <h3>Lista de Cronogrmas </h3>
+        <h3>Lista de Cronogramas </h3>
         
         <hr>
 
@@ -29,7 +29,6 @@
                 <th>Medico</th>
                 <th>Hospital</th>
                 <th>Horario</th>
-                <th>Paciente</th>
                 <th>Opções</th>
             </tr>
 
@@ -40,10 +39,9 @@
                 <td>{{ cronograma.medico }}</td>
                 <td>{{ cronograma.hospital}}</td>
                 <td>{{ cronograma.horario}}</td>
-                <td>{{ cronograma.paciente.nome}}</td>
                 <td>
                     <a href="{% url 'editar-cronograma' cronograma.pk %}" class="btn btn-warning btn-sm" title="Editar">Editar</a>
-                    <a href="{% url 'excluir-cronograma' cronograma.pk %}" class="btn btn-danger btn-sm" title="Excluir">Execluir</a>
+                    <a href="{% url 'excluir-cronograma' cronograma.pk %}" class="btn btn-danger btn-sm" title="Excluir">Excluir</a>
                 </td>
                 </tr>
 
@@ -69,7 +67,7 @@
 
                 <a href="?page={{ page_obj.paginator.num_pages }}">Última</a>
             </div>
-            <a  href="{% url 'cadastrar-cronograma' %}"><button class="btn btn-primary btn-sm" >Cadastra Novo Cronograma</button></a> 
+            <a  href="{% url 'cadastrar-cronograma' %}"><button class="btn btn-primary btn-sm" >Cadastrar novo cronograma</button></a> 
         </div>
     </div>
 {% endblock %}

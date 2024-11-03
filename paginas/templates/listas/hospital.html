@@ -23,7 +23,7 @@
             <table class="table table-striped">
                 <tr>
                     <th>Nome</th>
-                    <th>descrição  </th>
+                    <th>descrição</th>
                     <th>Opções</th>
                 </tr>
 
@@ -33,7 +33,7 @@
                     <td>{{ hospital.descricao}}</td>
                     <td>
                         <a href="{% url 'editar-hospital' hospital.pk %}" class="btn btn-warning btn-sm" title="Editar">Editar</a>
-                        <a href="{% url 'excluir-hospital' hospital.pk %}" class="btn btn-danger btn-sm" title="Excluir">Execluir</a>
+                        <a href="{% url 'excluir-hospital' hospital.pk %}" class="btn btn-danger btn-sm" title="Excluir">Excluir</a>
                     </td>
                 </tr>
                 {% empty %}

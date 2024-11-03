@@ -221,7 +221,7 @@ class TriagemUpdate(GroupRequiredMixin, UpdateView):
     model = Triagem
     fields = ['paciente', 'data', 'medico', 'hospital', 'horario', 'pressao', 'temperatura', 'peso', 'glicose']
     template_name = 'form.html'
-    success_url = reverse_lazy('listar-triagem')
+    success_url = reverse_lazy('Listar-triagem')
 
     def get_object(self, query=None):
         self.object = Triagem.objects.get(pk=self.kwargs['pk'], usuario=self.request.user)
@@ -407,7 +407,7 @@ class CronogramaCreate(GroupRequiredMixin, CreateView):
     group_required = u"Medico"
     login_url = reverse_lazy('login')
     model = Cronograma
-    fields = ['nome', 'data', 'medico', 'hospital', 'Horario',]
+    fields = ['nome', 'data', 'medico', 'hospital', 'horario',]
     template_name = 'form.html'
     success_url = reverse_lazy('Listar-cronograma')
 
