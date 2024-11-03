@@ -79,3 +79,15 @@ body {
 .badge bg-secondary{
     background-color: #ffffff;
 }
+
+
+.dados-paciente {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.dados-paciente .info {
+    width: 48%;
+}

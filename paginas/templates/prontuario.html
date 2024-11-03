@@ -2,7 +2,6 @@
 {% extends 'modelo.html' %}
 {% load static %}
 
-
 {% block titulo %}
     <title>Prontuário - {{ paciente.nome }}</title>
 {% endblock %}
@@ -12,13 +11,38 @@
         <h2>Prontuário do Paciente: {{ paciente.nome }}</h2>
         
         <h4>Dados do Paciente</h4>
-        <p><strong>Idade:</strong> {{ paciente.idade }}</p>
-        <p><strong>Telefone:</strong> {{ paciente.telefone }}</p>
-        <p><strong>Número SUS:</strong> {{ paciente.numero_sus }}</p>
-        <p><strong>CPF:</strong> {{ paciente.cpf }}</p>
-        <p><strong>Descrição:</strong> {{ paciente.descricao }}</p>
-        <p><strong>Sintomas:</strong> {{ paciente.sintomas }}</p>
-        <p><strong>Doença Crônica:</strong> {{ paciente.doença_cronica }}</p>
+        <table class="table table-striped">
+            <tbody>
+                <tr>
+                    <th>Idade</th>
+                    <td>{{ paciente.idade }}</td>
+                </tr>
+                <tr>
+                    <th>Telefone</th>
+                    <td>{{ paciente.telefone }}</td>
+                </tr>
+                <tr>
+                    <th>Número SUS</th>
+                    <td>{{ paciente.numero_sus }}</td>
+                </tr>
+                <tr>
+                    <th>CPF</th>
+                    <td>{{ paciente.cpf }}</td>
+                </tr>
+                <tr>
+                    <th>Descrição</th>
+                    <td>{{ paciente.descricao }}</td>
+                </tr>
+                <tr>
+                    <th>Sintomas</th>
+                    <td>{{ paciente.sintomas }}</td>
+                </tr>
+                <tr>
+                    <th>Doença Crônica</th>
+                    <td>{{ paciente.doença_cronica }}</td>
+                </tr>
+            </tbody>
+        </table>
 
         <h4>Consultas</h4>
         <table class="table table-striped">
