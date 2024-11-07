@@ -1,51 +1,157 @@
-{% extends 'modelo.html' %}
 {% load static %}
-
-{% block titulo %}
-<title>Página Inicial</title>
-{% endblock %}
-{% block conteudo %}
-<div class="container">
-    <h1>Seja Bem-Vindo</h1>
-</div>
-
-<div class="carousel-section">
-    <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
-      <div class="carousel-inner">
-        <div class="carousel-item active">
-          <img class="d-block w-100" src="{% static 'fotos/f1.jpg' %}" alt="f1" width="100">
-        </div>
-        <div class="carousel-item">
-          <img class="d-block w-100" src="{% static 'fotos/f2.jfif' %}" alt="f2" width="100">
-        </div>
-        <div class="carousel-item">
-          <img class="d-block w-100" src="{% static 'fotos/f4.jpg' %}" alt="f3" width="100">
-        </div>
-        <div class="carousel-item">
-          <img class="d-block w-100" src="{% static 'fotos/f3.jpg' %}" alt="f4" width="100">
-        </div>
-      </div>
-      <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="sr-only">Anterior</span>
-      </a>
-      <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="sr-only">Próximo</span>
-      </a>
-    </div>
-</div>
-
-<div class="card-section">
-    <div class="container">
-        <div class="row">
-            <div class="card gree">
-                <h2><a href="{% url 'cadastrar-consulta' %}">Cadastro de Consulta</a></h2>
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{% static 'fotos/PROJETO.ico' %}" type="image/x-icon">
+    {% block titulo %}
+    <title>Dashboard Hospitalar</title>
+    {% endblock %}
+  
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="{% static 'css/sb-admin-2.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/meu.css' %}">
+</head>
+<body>
+    <div id="wrapper">
+        {% include 'includes/sidebar.html' %}
+    
+        <div id="content-wrapper" class="d-flex flex-column">
+            <div>
+                {% include 'includes/navbar.html' %}
             </div>
-            <div class="card gree">
-                <h2><a href="{% url 'Listar-cronograma' %}">Cronograma</a></h2>
+            {% block conteudo %}
+            <div class="container-fluid">
+                <!-- Dashboard de Visão Geral -->
+                <h3 class="mt-4">Visão Geral do Hospital</h3>
+                <div class="row">
+                    <!-- Cards de Informação Rápida -->
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="card border-left-primary shadow h-100 py-2">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1"><a href="{% url 'Listar-consulta' %}">Consultas Agendadas</a></div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">120</div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fas fa-calendar-check fa-2x text-gray-300"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="card border-left-success shadow h-100 py-2">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1"> <a href="{% url 'listar-atendimentos' %}"> Atendimentos Realizados</a></div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">45</div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fas fa-user-md fa-2x text-gray-300"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="card border-left-warning shadow h-100 py-2">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1"> <a href="{% url 'Listar-triagem' %}">Pacientes em Espera</a></div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">8</div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fas fa-procedures fa-2x text-gray-300"></i>
+                                    </div>
+                                </div>
+                               
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="card border-left-danger shadow h-100 py-2">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div  class="text-xs font-weight-bold text-danger text-uppercase mb-1"> <a href="{% url 'Listar-notificacao' %}">Notificações Pendentes</a></div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">5</div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fas fa-bell fa-2x text-gray-300"></i>
+                                    </div>
+                                </div>
+                               
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tabela de Últimos Pacientes Atendidos -->
+                <h4>Últimos Pacientes Atendidos</h4>
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                      
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nome do Paciente</th>
+                                <th>Médico Responsável</th>
+                                <th>Status</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{ paciente.id }}</td>
+                                <td>{{ paciente.nome }}</td>
+                                <td>{{ medico.nome }}</td>
+                                <td>Concluído</td>
+                                <td><a href="{% url 'editar-paciente' pk=1 %}" class="btn btn-primary btn-sm">Editar</a></td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>Maria Santos</td>
+                                <td>Dr. Ana Costa</td>
+                                <td>Em Atendimento</td>
+                                <td><a href="{% url 'editar-paciente' pk=2 %}" class="btn btn-primary btn-sm">Editar</a></td>
+                            </tr>
+                            <!-- Adicione mais pacientes conforme necessário -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
+            {% endblock %}
         </div>
     </div>
-</div>
-{% endblock %}
+
+    {% block rodape %}
+    <div class="bg-light">
+        {% include 'includes/rodape.html' %}
+    </div>
+    {% endblock %}
+
+    {% block scripts %}
+    <!-- Scripts necessários -->
+    <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'js/sb-admin-2.min.js' %}"></script>
+    <script src="{% static 'js/jquery-3.2.1.slim.min.js' %}"></script>
+    <script src="{% static 'js/popper.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/script.js' %}"></script>
+    <script src="{% static 'js/meu.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
+    {% endblock %}
+</body>
+</html>

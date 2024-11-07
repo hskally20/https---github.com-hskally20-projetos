@@ -555,10 +555,10 @@ class AtendimentoCreate(GroupRequiredMixin, CreateView):
     group_required = u'Medico'
     login_url = reverse_lazy('login')
     model = Atendimento
-    fields = ['remedio', 'diagnostico', 'recomendacoes','paciente','usuario','medico']
+    fields = ['remedio', 'diagnostico', 'recomendacoes','paciente','medico']
     template_name = 'form2.html'
     success_url = reverse_lazy('listar-atendimentos')
-
+     
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
         context['Titulo'] = 'Criar Atendimento'
@@ -585,6 +585,7 @@ class AtendimentoCreate(GroupRequiredMixin, CreateView):
         paciente = get_object_or_404(Paciente, id=paciente_pk)
         form.instance.paciente = paciente
         return super().form_valid(form)
+       
 
     
 class ConsultaDetailView(DetailView):
