@@ -24,10 +24,10 @@ STATICFILES_DIRS = [
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-1s!kbdskouxxa7w)ova+2*f-e4mly&q^ij9v68)-qe8xmhtm(1'
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'q$a)n8_z%*d3iq*31+s&jk=4$a8b075=@^!@-w(-valkngvvc3')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = []
 
@@ -62,6 +62,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'hospital.urls'
+ALLOWED_HOSTS = ['.onrender.com']
 
 TEMPLATES = [
     {
@@ -98,10 +99,15 @@ CHANNEL_LAYERS = {
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'nome_do_banco',
+        'USER': 'usuario',
+        'PASSWORD': 'senha',
+        'HOST': 'localhost',  # Para PostgreSQL na Render, use o host que será fornecido pela Render
+        'PORT': '5432',
     }
 }
+
 
 
 # Password validation
