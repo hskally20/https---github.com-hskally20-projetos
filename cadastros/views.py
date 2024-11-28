@@ -11,8 +11,49 @@ from django.views import View
 import json
 from django.contrib.auth.models import User, Group
 from django.contrib.auth.decorators import user_passes_test
+from .models import Estatisticas , Notificacao
 
-# Check if the user is an admin
+def marcar_como_lida(request, notificacao_id):
+    try:
+        notificacao = Notificacao.objects.get(id=notificacao_id)
+        notificacao.status = 'Lida'
+        notificacao.save()
+        return JsonResponse({'success': True})
+    except Notificacao.DoesNotExist:
+        return JsonResponse({'success': False})
+
+def deletar_notificacao(request, notificacao_id):
+    try:
+        notificacao = Notificacao.objects.get(id=notificacao_id)
+        notificacao.delete()
+        return JsonResponse({'success': True})
+    except Notificacao.DoesNotExist:
+        return JsonResponse({'success': False})
+
+def dashboard(request):
+    # Recupera os dois últimos atendimentos realizados
+    ultimos_atendimentos = Consulta.objects.filter(status='realizada').order_by('-data_atendimento')[:2]
+
+    return render(request, 'index.html', {
+        'ultimos_atendimentos': ultimos_atendimentos,
+    })
+def dashboard(request):
+    consultas_agendadas = Consulta.objects.filter(status='Agendada').count()
+    atendimentos_realizados = Consulta.objects.filter(status='Concluído').count()
+    pacientes_em_espera = Consulta.objects.filter(status='Em Espera').count()
+    notificacoes = Notification.objects.filter(status='Pendente').count()
+
+    ultimos_atendimentos = Consulta.objects.filter(status='Concluído').order_by('-data_atendimento')[:5]
+
+    context = {
+        'consultas_agendadas': consultas_agendadas,
+        'atendimentos_realizados': atendimentos_realizados,
+        'pacientes_em_espera': pacientes_em_espera,
+        'notificacoes': notificacoes,
+        'ultimos_atendimentos': ultimos_atendimentos,
+    }
+
+    return render(request, 'dashboard.html', context)
 def admin_required(user):
     return user.is_superuser
 

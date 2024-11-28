@@ -3,7 +3,7 @@ from .views import HospitalCreate, MedicoCreate , PacienteCreate , CronogramaCre
 from .views import  HospitalUpdate, MedicoUpdate , PacienteUpdate,CronogramaUpdate , ConsultaUpdate ,Consulta2Update, TriagemUpdate , AtendimentoUpdate
 from .views import  HospitalDelete,MedicoDelete , PacienteDelete , CronogramaDelete, ConsultaDelete, TriagemDelete , AtendimentoDelete
 from .views import  HospitalList,MedicoList ,PacienteList ,CronogramaList ,ConsultaList,ComentarioList,TriagemList, NotificacaoList ,AtendimentoList
-from .views import ChamarPacienteView ,manage_groups , prontuario_view
+from .views import ChamarPacienteView ,manage_groups , prontuario_view , Notificacao
 
 
 
@@ -20,6 +20,7 @@ urlpatterns = [
         name='cadastrar-cronograma'),
     path('cadastrar/consulta/', ConsultaCreate.as_view(),
         name='cadastrar-consulta'),
+   
    
     path('cadastrar/comentario/', ComentarioCreate.as_view(),
         name='cadastra-comentario'),
@@ -90,5 +91,7 @@ urlpatterns = [
     path('chamar-paciente/', ChamarPacienteView.as_view(), name='chamar-paciente'),
     path('manage-groups/', manage_groups, name='manage_groups'),
     path('prontuario/<int:paciente_id>/', prontuario_view, name='prontuario'),
+    # path('marcar-como-lida/<int:notificacao_id>/', views.marcar_como_lida, name='marcar-como-lida'),
+    # path('deletar-notificacao/<int:notificacao_id>/', views.deletar_notificacao, name='deletar-notificacao'),
 ]
 

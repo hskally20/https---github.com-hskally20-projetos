@@ -1,4 +1,5 @@
-{% extends 'modelo.html' %}  <!-- Herda a estrutura básica do seu modelo -->
+{% extends 'modelo.html' %}
+{% load static %}
 
 {% block titulo %}
     <title>Notificações</title>
@@ -6,34 +7,75 @@
 
 {% block conteudo %}
     <div class="container">
-        <h3>Minhas Notificações</h3>
-        
-        <!-- Verifica se há notificações -->
-        {% if not notificacoes %}
-            <p>Você não tem notificações no momento.</p>
-        {% else %}
-            <div class="table-responsive">
-                <table class="table table-light">
-                    <thead>
-                        <tr>
-                            <th>Mensagem</th>
-                            <th>Data</th>
+        <h3>Notificações</h3>
+        <hr>
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Mensagem</th>
+                        <th>Status</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for notificacao in notificacoes %}
+                        <tr id="notificacao_{{ notificacao.id }}">
+                            <td>{{ notificacao.id }}</td>
+                            <td>{{ notificacao.mensagem }}</td>
+                            <td id="status_{{ notificacao.id }}">{{ notificacao.status }}</td>
+                            <td>
+                                <!-- Botão Marcar como Lida -->
+                                <button class="btn btn-success btn-sm" onclick="marcarComoLida({{ notificacao.id }})">Marcar como Lida</button>
+                                <!-- Botão Deletar -->
+                                <button class="btn btn-danger btn-sm" onclick="deletarNotificacao({{ notificacao.id }})">Deletar</button>
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        {% for notificacao in notificacoes %}
-                            <tr class="table-success">
-                                <td>{{ notificacao.mensagem }}</td>
-                                <td>{{ notificacao.data|date:"d/m/Y H:i" }}</td>
-                            </tr>
-                        {% empty %}
-                            <tr>
-                                <td colspan="2">Nenhuma notificação encontrada.</td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        {% endif %}
+                    {% empty %}
+                        <tr>
+                            <td colspan="4">Nenhuma notificação encontrada.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="text-center">
+            {% if notificacoes.has_previous %}
+                <a href="?page={{ notificacoes.previous_page_number }}">Voltar</a>
+            {% endif %}
+
+            <span>Página: {{ notificacoes.number }}</span>
+
+            {% if notificacoes.has_next %}
+                <a href="?page={{ notificacoes.next_page_number }}">Próxima</a>
+            {% endif %}
+        </div>
     </div>
+
 {% endblock %}
+<script>
+    function marcarComoLida(id) {
+        // Mudar a cor da linha para indicar que foi lida
+        document.getElementById("notificacao_" + id).style.backgroundColor = "#d3ffd3"; // Cor de fundo para 'lida'
+        
+        // Atualizar o status no campo da tabela
+        document.getElementById("status_" + id).textContent = "Lida";
+
+        // Aqui você pode adicionar um AJAX ou redirecionamento para atualizar o status no banco
+        // Exemplo: enviar uma requisição para o Django para alterar o status da notificação
+    }
+
+    function deletarNotificacao(id) {
+        // Confirmação antes de deletar
+        if (confirm("Tem certeza que deseja excluir esta notificação?")) {
+            // Deletar a linha da tabela
+            var row = document.getElementById("notificacao_" + id);
+            row.remove();
+
+            // Aqui você pode adicionar um AJAX ou redirecionamento para deletar a notificação no banco
+            // Exemplo: enviar uma requisição para o Django para excluir a notificação
+        }
+    }
+</script>

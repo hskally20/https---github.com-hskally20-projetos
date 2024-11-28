@@ -32,6 +32,11 @@
                      <th>Aceitar ou rejeitar consulta</th>
                      {% endif %}
                     {% endfor %}
+                    {% for group in request.user.groups.all %}
+                    {% if group.name == 'Medico' or group.name == 'Admin' %}
+                    <th>iniciar triagem </th>
+                    {% endif %}
+                   {% endfor %}
                 </tr>
                 
         {% for consulta in object_list|dictsort:"data" %}
@@ -57,6 +62,14 @@
                         {% for group in request.user.groups.all %}
                             {% if group.name == 'Medico' or group.name == 'Admin' %}
                                 <a href="{% url 'editar-consulta2' consulta.pk %}" class="btn btn-primary btn-sm" title="Editar"> Alterar status </a> 
+                            {% endif %}
+                        {% endfor %}
+
+                    </td>
+                    <td>
+                        {% for group in request.user.groups.all %}
+                            {% if group.name == 'Medico' or group.name == 'Admin' %}
+                                <a href="{% url 'cadastrar-triagem' %}" class="btn btn-success btn-sm" title="triagem"> realizar triagem </a> 
                             {% endif %}
                         {% endfor %}
                         {% empty %}

@@ -101,3 +101,12 @@ class Atendimento(models.Model):
     def __str__(self):
         return f'Atendimento de {self.paciente} - {self.medico}'
 
+
+
+class Estatisticas(models.Model):
+    consultas_agendadas = models.IntegerField(default=0)
+    atendimentos_realizados = models.IntegerField(default=0)
+    pacientes_espera = models.IntegerField(default=0)
+    notificacoes_pendentes = models.IntegerField(default=0)
+    
+  
