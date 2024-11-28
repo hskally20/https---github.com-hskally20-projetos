@@ -1,1 +1,70 @@
-c
+{% extends 'modelo.html' %}
+{% load static %}
+
+{% block titulo %}
+    <title>Lista de Médicos</title>
+{% endblock %}
+
+{% block conteudo %}
+    <div class="container">
+        <h3>Lista de Médicos</h3>
+        
+        <hr>
+
+        <div class="table-responsive">
+            <!-- Formulário de busca -->
+            <form action="?" method="GET">
+                <input type="text" name="nome" class="p-1 border" value="{{ nome }}" placeholder="Buscar por nome">
+                <button type="submit" class="btn btn-success">Buscar</button>
+                <a href="{% url 'listar-medicos' %}">Limpar</a>
+            </form>
+
+            <hr>
+
+            <table class="table table-striped">
+                <tr>
+                    <th>Nome</th>
+                    <th>Especialização</th>
+                    <th>Hospital</th>
+                    <th>Opções</th>
+                </tr>
+
+                {% for medico in page_obj %}
+                    <tr>
+                        <td>{{ medico.nome }}</td>
+                        <td>{{ medico.especificacao }}</td>
+                        <td>{{ medico.hospital.nome }}</td>
+                        <td>
+                            <a href="{% url 'editar-medico' medico.pk %}" class="btn btn-warning btn-sm" title="Editar">Editar</a>
+                            <a href="{% url 'excluir-medico' medico.pk %}" class="btn btn-danger btn-sm" title="Excluir">Excluir</a>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="4">Nenhum médico registrado.</td>
+                    </tr>
+                {% endfor %}
+            </table>
+
+            <div class="text-center">
+                <!-- Paginação -->
+                <a href="?page=1">Primeira</a>
+
+                {% if page_obj.has_previous %}
+                    <a href="?page={{ page_obj.previous_page_number }}">Voltar</a>
+                {% endif %}
+
+                <span>Página: {{ page_obj.number }}</span>
+
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}">Próxima</a>
+                {% endif %}
+
+                <a href="?page={{ page_obj.paginator.num_pages }}">Última</a>
+            </div>
+
+            <!-- Botão para cadastrar novo médico -->
+            <a href="{% url 'cadastrar-medico' %}"><button class="btn btn-primary btn-sm">Cadastrar novo médico</button></a>
+        </div>
+    </div>
+{% endblock %}

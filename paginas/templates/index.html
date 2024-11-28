@@ -96,32 +96,33 @@
                     </div>
                 </div>
 
-                <!-- Tabela de Últimos Pacientes Atendidos -->
-                <h4>Últimos Pacientes Atendidos</h4>
-                <div class="table-responsive">
-                    <table class="table table-bordered">
-                        <thead>
+         <!-- Tabela de Últimos Pacientes Atendidos -->
+            <h4>Últimos Pacientes Atendidos</h4>
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nome do Paciente</th>
+                            <th>Médico Responsável</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for consulta in consultas %}
                             <tr>
-                                <th>ID</th>
-                                <th>Nome do Paciente</th>
-                                <th>Médico Responsável</th>
-                                <th>Status</th>
-                                <th>Ações</th>
+                                <td>{{ consulta.id }}</td>
+                                <td>{{ consulta.paciente.nome }}</td>
+                                <td>{{ consulta.medico.nome }}</td>
+                                <td>Concluído</td>
+                                <td><button class="btn btn-primary">Detalhes</button></td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            {% for consulta in ultimos_atendimentos %}
-                                <tr>
-                                    <td>{{ consulta.id }}</td>
-                                    <td>{{ consulta.paciente.nome }}</td>
-                                    <td>{{ consulta.medico.nome }}</td>
-                                    <td>Concluído</td>
-                                    <td><a href="{% url 'editar-paciente' pk=consulta.paciente.id %}" class="btn btn-primary btn-sm">Editar</a></td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
             {% endblock %}
         </div>
     </div>
