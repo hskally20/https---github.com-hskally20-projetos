@@ -48,10 +48,12 @@
                         <a class="dropdown-item" href="{% url 'cadastrar-cronograma' %}">Cadastrar Cronograma</a>
                         <a class="dropdown-item" href="{% url 'cadastrar-paciente' %}">Cadastrar Pacientes</a>
                         <a class="dropdown-item" href="{% url 'cadastrar-triagem' %}">Realizar Triagem</a>
+                        
                     {% elif group.name == 'Medico' %}
                         <a class="dropdown-item" href="{% url 'cadastrar-cronograma' %}">Cadastrar Cronograma</a>
                         <a class="dropdown-item" href="{% url 'cadastrar-paciente' %}">Cadastrar Pacientes</a>
                         <a class="dropdown-item" href="{% url 'cadastrar-triagem' %}">Cadastrar Triagem</a>
+                        <a class="dropdown-item" href="{% url 'cadastrar-medico' %}">Cadastrar Médico</a>
                     {% elif group.name == 'Paciente' %}
                         <a class="dropdown-item" href="{% url 'cadastrar-paciente' %}">Cadastrar Pacientes</a>
                     {% endif %}
@@ -82,6 +84,7 @@
                         <a class="dropdown-item" href="{% url 'Listar-paciente' %}">Pacientes Cadastrados</a>
                         <a class="dropdown-item" href="{% url 'Listar-consulta' %}">Consultas Agendadas</a>
                         <a class="dropdown-item" href="{% url 'Listar-triagem' %}">Triagens Feitas</a>
+                        <a class="dropdown-item" href="{% url 'listar-medico' %}">Médicos Cadastrados</a>
                     {% elif group.name == 'Paciente' %}
                         <a class="dropdown-item" href="{% url 'Listar-consulta' %}">Consultas Agendadas</a>
                         <a class="dropdown-item" href="{% url 'Listar-paciente' %}">Pacientes Cadastrados</a>

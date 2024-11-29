@@ -5,8 +5,7 @@ from .views import  HospitalDelete,MedicoDelete , PacienteDelete , CronogramaDel
 from .views import  HospitalList,MedicoList ,PacienteList ,CronogramaList ,ConsultaList,ComentarioList,TriagemList, NotificacaoList ,AtendimentoList
 from .views import ChamarPacienteView ,manage_groups , prontuario_view , Notificacao 
 from .views import MarcarComoLidaView, NotificacaoDeleteView
-
-
+from . import views
 
 
 
@@ -88,7 +87,7 @@ urlpatterns = [
     name='Listar-notificacao'),
     path('listar/atendimentos/', AtendimentoList.as_view(),
     name='listar-atendimentos'),
-    
+   
     path('chamar-paciente/', ChamarPacienteView.as_view(), name='chamar-paciente'),
     path('manage-groups/', manage_groups, name='manage_groups'),
     path('prontuario/<int:paciente_id>/', prontuario_view, name='prontuario'),

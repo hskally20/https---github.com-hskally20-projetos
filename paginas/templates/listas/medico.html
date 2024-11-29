@@ -24,27 +24,40 @@
             <table class="table table-striped">
                 <tr>
                     <th>Nome</th>
-                    <th>Especialização</th>
+                    <th>CPF</th>
+                    <th>Especificação</th>
+                    <th>Telefone</th>
                     <th>Hospital</th>
-                    <th>Opções</th>
+                    {% for group in request.user.groups.all %}
+                        {% if group.name == 'Medico' or group.name == 'Admin' %}
+                            <th>Opções</th>
+                        {% endif %}
+                    {% endfor %}
                 </tr>
-
-                {% for medico in page_obj %}
+            
+                {% for medico in object_list %}
                     <tr>
                         <td>{{ medico.nome }}</td>
+                        <td>{{ medico.cpf }}</td>
                         <td>{{ medico.especificacao }}</td>
+                        <td>{{ medico.numero }}</td>
                         <td>{{ medico.hospital.nome }}</td>
-                        <td>
-                            <a href="{% url 'editar-medico' medico.pk %}" class="btn btn-warning btn-sm" title="Editar">Editar</a>
-                            <a href="{% url 'excluir-medico' medico.pk %}" class="btn btn-danger btn-sm" title="Excluir">Excluir</a>
-                        </td>
+                        
+                        {% for group in request.user.groups.all %}
+                            {% if group.name == 'Medico' or group.name == 'Admin' %}
+                                <td>
+                                    <a href="{% url 'editar-medico' medico.pk %}" class="btn btn-warning btn-sm" title="Editar">Editar</a>
+                                    <a href="{% url 'excluir-medico' medico.pk %}" class="btn btn-danger btn-sm" title="Excluir">Excluir</a>
+                                </td>
+                            {% endif %}
+                        {% endfor %}
                     </tr>
                 {% empty %}
                     <tr>
-                        <td colspan="4">Nenhum médico registrado.</td>
+                        <td colspan="6">Nenhum médico registrado.</td>
                     </tr>
                 {% endfor %}
-            </table>
+            </table>            
 
             <div class="text-center">
                 <!-- Paginação -->

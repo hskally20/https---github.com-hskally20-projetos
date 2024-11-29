@@ -13,6 +13,8 @@ from django.contrib.auth.models import User, Group
 from django.contrib.auth.decorators import user_passes_test
 from .models import Estatisticas , Notificacao
 
+def erro_acesso(request):
+    return render(request, 'erro_acesso.html', {'mensagem': 'Você não tem permissão para modificar esse objeto.'})
 class MarcarComoLidaView(View):
     def post(self, request, notificacao_id):
         try:
@@ -35,13 +37,6 @@ class NotificacaoDeleteView(LoginRequiredMixin, DeleteView):
         if request.is_ajax():
             return JsonResponse({'success': True})
         return super().delete(request, *args, **kwargs)
-
-
-
-def lista_consultas(request):
-    # Pegando os dois últimos pacientes atendidos
-    consultas = Consulta.objects.all().order_by('-data')[:2]
-    return render(request, 'index.html', {'object_list': consultas})
 
 
 def admin_required(user):
@@ -209,14 +204,14 @@ class HospitalUpdate(GroupRequiredMixin, UpdateView):
     def get_object(self, query=None):
         self.object = Hospital.objects.get(pk=self.kwargs['pk'], usuario=self.request.user)
         return self.object
-
+    
 
 class MedicoUpdate(GroupRequiredMixin, UpdateView):
     group_required = u"Admin"
     model = Medico
     fields = ['numero', 'nome', 'cpf', 'especificacao', 'hospital']
     template_name = 'form.html'
-    success_url = reverse_lazy('inicio')
+    success_url = reverse_lazy('listar-medico')
 
     def get_object(self, query=None):
         self.object = Medico.objects.get(pk=self.kwargs['pk'], usuario=self.request.user)
@@ -281,7 +276,7 @@ class MedicoDelete(GroupRequiredMixin, DeleteView):
     group_required = u"Admin"
     model = Medico
     template_name = 'form-excluir.html'
-    success_url = reverse_lazy('inicio')
+    success_url = reverse_lazy('listar-medico')
 
     def get_object(self, query=None):
         self.object = Medico.objects.get(pk=self.kwargs['pk'], usuario=self.request.user)
@@ -297,6 +292,7 @@ class PacienteDelete(GroupRequiredMixin, DeleteView):
     def get_object(self, query=None):
         self.object = Paciente.objects.get(pk=self.kwargs['pk'], usuario=self.request.user)
         return self.object
+        
 
 
 class TriagemDelete(GroupRequiredMixin, DeleteView):
@@ -566,7 +562,13 @@ class ConsultaList(ListView):
             index = (i + 1) * 1 + i 
             lista_consultas_ordenada.insert(index, consulta_preferencial)
 
+        nome = self.request.GET.get('nome')  # Obtém o nome do paciente da requisição GET
+        if nome:
+            # Aplica o filtro de nome para as consultas
+            lista_consultas_ordenada = [consulta for consulta in lista_consultas_ordenada if nome.lower() in consulta.paciente.nome.lower()]
+
         return lista_consultas_ordenada
+
 
 
 class ComentarioCreate(CreateView):
@@ -586,7 +588,7 @@ class AtendimentoCreate(GroupRequiredMixin, CreateView):
     group_required = u'Medico'
     login_url = reverse_lazy('login')
     model = Atendimento
-    fields = ['remedio', 'diagnostico', 'recomendacoes','paciente','medico']
+    fields = ['remedio', 'diagnostico', 'recomendacoes','paciente','medico','usuario']
     template_name = 'form2.html'
     success_url = reverse_lazy('listar-atendimentos')
      
@@ -663,14 +665,15 @@ class AtendimentoList(GroupRequiredMixin, ListView):
     model = Atendimento
     template_name = 'listas/atendimento.html'
     paginate_by = 5
-
     def get_queryset(self):
-        nome = self.request.GET.get('nome')
+        nome = self.request.GET.get('paciente')  # Obtém o nome do paciente da requisição GET
         if nome:
-            atendimento = Atendimento.objects.filter(paciente__nome__icontains=nome)
+            # Filtra os atendimentos onde o nome do paciente contém o termo pesquisado
+            atendimentos = Atendimento.objects.filter(paciente__nome__icontains=nome)
         else:
-            atendimento = Atendimento.objects.all()
-        return atendimento
+            atendimentos = Atendimento.objects.all()  # Retorna todos os atendimentos se não houver pesquisa
+        return atendimentos
+
 
 class ComentarioList(ListView):
     model = Comentario
