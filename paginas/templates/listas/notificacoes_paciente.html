@@ -6,76 +6,94 @@
 {% endblock %}
 
 {% block conteudo %}
-    <div class="container">
-        <h3>Notificações</h3>
-        <hr>
-        <div class="table-responsive">
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Mensagem</th>
-                        <th>Status</th>
-                        <th>Ações</th>
+<div class="container">
+    <h3>Notificações</h3>
+    <hr>
+
+    <!-- Formulário de busca -->
+    <form action="?" method="GET" class="mb-3">
+        <input type="text" name="busca" class="p-1 border" value="{{ busca }}" placeholder="Buscar notificações">
+        <button type="submit" class="btn btn-success">Buscar</button>
+        <a href="{% url 'Listar-notificacao' %}" class="btn btn-secondary">Limpar</a>
+    </form>
+
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Mensagem</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for notificacao in notificacoes %}
+                    <tr id="notificacao_{{ notificacao.id }}">
+                        <td>{{ notificacao.mensagem }}</td>
+                        <td id="status_{{ notificacao.id }}">{{ notificacao.status }}</td>
+                        <td>
+                            <button class="btn btn-primary btn-sm" title="marcar" onclick="marcarComoLida({{ notificacao.id }})">Marcar como Lida</button>
+                            <a href="{% url 'deletar-notificacao' notificacao.pk %}" class="btn btn-danger btn-sm" title="Excluir"> Excluir </a>
+                        </td>
+                       
                     </tr>
-                </thead>
-                <tbody>
-                    {% for notificacao in notificacoes %}
-                        <tr id="notificacao_{{ notificacao.id }}">
-                            <td>{{ notificacao.id }}</td>
-                            <td>{{ notificacao.mensagem }}</td>
-                            <td id="status_{{ notificacao.id }}">{{ notificacao.status }}</td>
-                            <td>
-                                <!-- Botão Marcar como Lida -->
-                                <button class="btn btn-success btn-sm" onclick="marcarComoLida({{ notificacao.id }})">Marcar como Lida</button>
-                                <!-- Botão Deletar -->
-                                <button class="btn btn-danger btn-sm" onclick="deletarNotificacao({{ notificacao.id }})">Deletar</button>
-                            </td>
-                        </tr>
-                    {% empty %}
-                        <tr>
-                            <td colspan="4">Nenhuma notificação encontrada.</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-
-        <div class="text-center">
-            {% if notificacoes.has_previous %}
-                <a href="?page={{ notificacoes.previous_page_number }}">Voltar</a>
-            {% endif %}
-
-            <span>Página: {{ notificacoes.number }}</span>
-
-            {% if notificacoes.has_next %}
-                <a href="?page={{ notificacoes.next_page_number }}">Próxima</a>
-            {% endif %}
-        </div>
+                {% empty %}
+                    <tr>
+                        <td colspan="4">Nenhuma notificação encontrada.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 
+    <div class="text-center">
+        {% if notificacoes.has_previous %}
+            <a href="?page={{ notificacoes.previous_page_number }}" class="btn btn-light">Voltar</a>
+        {% endif %}
+
+        <span>Página {{ notificacoes.number }} de {{ notificacoes.paginator.num_pages }}</span>
+
+        {% if notificacoes.has_next %}
+            <a href="?page={{ notificacoes.next_page_number }}" class="btn btn-light">Próxima</a>
+        {% endif %}
+    </div>
+</div>
 {% endblock %}
-<script>
-    function marcarComoLida(id) {
-        // Mudar a cor da linha para indicar que foi lida
-        document.getElementById("notificacao_" + id).style.backgroundColor = "#d3ffd3"; // Cor de fundo para 'lida'
-        
-        // Atualizar o status no campo da tabela
-        document.getElementById("status_" + id).textContent = "Lida";
+<script>function marcarComoLida(notificacaoId) {
+    // Fazer uma requisição para o endpoint que marca a notificação como lida
+    fetch(`/marcar-como-lida/${notificacaoId}/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCSRFToken(), // Captura o token CSRF do HTML
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Atualizar o status da notificação na tabela
+            document.getElementById(`status_${notificacaoId}`).textContent = "Lida";
 
-        // Aqui você pode adicionar um AJAX ou redirecionamento para atualizar o status no banco
-        // Exemplo: enviar uma requisição para o Django para alterar o status da notificação
-    }
-
-    function deletarNotificacao(id) {
-        // Confirmação antes de deletar
-        if (confirm("Tem certeza que deseja excluir esta notificação?")) {
-            // Deletar a linha da tabela
-            var row = document.getElementById("notificacao_" + id);
-            row.remove();
-
-            // Aqui você pode adicionar um AJAX ou redirecionamento para deletar a notificação no banco
-            // Exemplo: enviar uma requisição para o Django para excluir a notificação
+            // Alterar o estilo visual da linha para indicar que está lida
+            const row = document.getElementById(`notificacao_${notificacaoId}`);
+            row.style.backgroundColor = "#d3ffd3"; // Verde claro
+        } else {
+            alert("Erro ao marcar como lida. Tente novamente.");
         }
-    }
+    })
+    .catch(error => {
+        console.error("Erro na requisição:", error);
+        alert("Ocorreu um erro. Verifique sua conexão ou tente novamente.");
+    });
+}
+
+// Função auxiliar para capturar o token CSRF
+function getCSRFToken() {
+    const cookieValue = document.cookie
+        .split('; ')
+        .find(row => row.startsWith('csrftoken='));
+    return cookieValue ? cookieValue.split('=')[1] : '';
+}
 </script>
+
+

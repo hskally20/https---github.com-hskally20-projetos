@@ -89,6 +89,7 @@ class Notificacao(models.Model):
     paciente = models.ForeignKey(User, on_delete=models.CASCADE)
     mensagem = models.CharField(max_length=255)
     data = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=255)
     def __str__(self):
       return self.mensagem
 class Atendimento(models.Model):

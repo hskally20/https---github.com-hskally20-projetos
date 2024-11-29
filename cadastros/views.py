@@ -13,25 +13,30 @@ from django.contrib.auth.models import User, Group
 from django.contrib.auth.decorators import user_passes_test
 from .models import Estatisticas , Notificacao
 
-def marcar_como_lida(request, notificacao_id):
-    try:
-        notificacao = Notificacao.objects.get(id=notificacao_id)
-        notificacao.status = 'Lida'
-        notificacao.save()
-        return JsonResponse({'success': True})
-    except Notificacao.DoesNotExist:
-        return JsonResponse({'success': False})
+class MarcarComoLidaView(View):
+    def post(self, request, notificacao_id):
+        try:
+            notificacao = Notificacao.objects.get(id=notificacao_id)
+            notificacao.status = "Lida"
+            notificacao.save()
+            return JsonResponse({'status': 'success'}, status=200)
+        except Notificacao.DoesNotExist:
+            return JsonResponse({'error': 'Notificação não encontrada'}, status=404)
 
-def deletar_notificacao(request, notificacao_id):
-    try:
-        notificacao = Notificacao.objects.get(id=notificacao_id)
-        notificacao.delete()
-        return JsonResponse({'success': True})
-    except Notificacao.DoesNotExist:
-        return JsonResponse({'success': False})
 
-from django.shortcuts import render
-from .models import Consulta
+class NotificacaoDeleteView(LoginRequiredMixin, DeleteView):
+    model = Notificacao
+    template_name = 'form-excluir.html'
+    success_url = reverse_lazy('Listar-notificacao')
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.delete()
+        if request.is_ajax():
+            return JsonResponse({'success': True})
+        return super().delete(request, *args, **kwargs)
+
+
 
 def lista_consultas(request):
     # Pegando os dois últimos pacientes atendidos
