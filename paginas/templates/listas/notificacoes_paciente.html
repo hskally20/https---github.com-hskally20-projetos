@@ -32,7 +32,7 @@
                         <td>{{ notificacao.mensagem }}</td>
                         <td id="status_{{ notificacao.id }}">{{ notificacao.status }}</td>
                         <td>
-                            <button class="btn btn-primary btn-sm" title="marcar" onclick="marcarComoLida({{ notificacao.id }})">Marcar como Lida</button>
+                            <button class="btn btn-success btn-sm" data-id="{{ notificacao.id }}">Marcar como Lida</button>
                             <a href="{% url 'deletar-notificacao' notificacao.pk %}" class="btn btn-danger btn-sm" title="Excluir"> Excluir </a>
                         </td>
                        
@@ -59,41 +59,6 @@
     </div>
 </div>
 {% endblock %}
-<script>function marcarComoLida(notificacaoId) {
-    // Fazer uma requisição para o endpoint que marca a notificação como lida
-    fetch(`/marcar-como-lida/${notificacaoId}/`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': getCSRFToken(), // Captura o token CSRF do HTML
-        },
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            // Atualizar o status da notificação na tabela
-            document.getElementById(`status_${notificacaoId}`).textContent = "Lida";
 
-            // Alterar o estilo visual da linha para indicar que está lida
-            const row = document.getElementById(`notificacao_${notificacaoId}`);
-            row.style.backgroundColor = "#d3ffd3"; // Verde claro
-        } else {
-            alert("Erro ao marcar como lida. Tente novamente.");
-        }
-    })
-    .catch(error => {
-        console.error("Erro na requisição:", error);
-        alert("Ocorreu um erro. Verifique sua conexão ou tente novamente.");
-    });
-}
-
-// Função auxiliar para capturar o token CSRF
-function getCSRFToken() {
-    const cookieValue = document.cookie
-        .split('; ')
-        .find(row => row.startsWith('csrftoken='));
-    return cookieValue ? cookieValue.split('=')[1] : '';
-}
-</script>
 
 

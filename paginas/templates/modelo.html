@@ -63,6 +63,30 @@
 
 
    {% endblock %}
+<script>document.addEventListener('DOMContentLoaded', function() {
+  // Adicionando um único event listener para toda a tabela
+  const table = document.querySelector('.table'); // Seleciona a tabela
 
+  table.addEventListener('click', function(event) {
+      // Verifica se o clique foi em um botão de "marcar como lida"
+      if (event.target && event.target.classList.contains('btn-success')) {
+          const id = event.target.getAttribute('data-id');
+          marcarComoLida(id);
+      }
+  });
+
+  function marcarComoLida(id) {
+      // Mudar a cor da linha para indicar que foi lida
+      const row = document.getElementById("notificacao_" + id);
+      row.style.backgroundColor = "#d3ffd3"; // Cor de fundo para 'lida'
+
+      // Atualizar o status no campo da tabela
+      const status = document.getElementById("status_" + id);
+      status.textContent = "Lida";
+
+      // Aqui você pode adicionar um AJAX ou redirecionamento para atualizar o status no banco
+      // Exemplo: enviar uma requisição para o Django para alterar o status da notificação
+  }
+});</script>
 </body>
 </html>

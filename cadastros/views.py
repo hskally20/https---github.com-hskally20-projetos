@@ -17,7 +17,7 @@ class MarcarComoLidaView(View):
     def post(self, request, notificacao_id):
         try:
             notificacao = Notificacao.objects.get(id=notificacao_id)
-            notificacao.status = "Lida"
+            notificacao.status = "lida"
             notificacao.save()
             return JsonResponse({'status': 'success'}, status=200)
         except Notificacao.DoesNotExist:
