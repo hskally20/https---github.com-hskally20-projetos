@@ -2,91 +2,109 @@
 {% load static %}
 
 {% block titulo %}
-<title>Gerenciar Grupos de Usuários</title>
+    <title>Gerenciar Grupos de Usuários</title>
 {% endblock %}
 
 {% block css %}
-<!-- Link do Bootstrap CSS via CDN -->
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
 {% endblock %}
 
 {% block conteudo %}
-<div class="container mt-5">
-    <h1 class="text-center mb-4">Gerenciar Grupos de Usuários</h1>
+    <div class="container mt-5">
+        <div class="alert alert-warning" role="alert">
+            <p class="mb-0">
+                Esta página permite a gestão dos grupos de usuários, garantindo que apenas os usuários com as permissões adequadas possam realizar determinadas ações no sistema. 
+                Por meio dela, é possível atualizar os grupos de usuários, como 'Médico', 'Admin' ou 'Paciente', 
+                e atribuir ou remover essas permissões conforme necessário.
+                Os administradores têm a responsabilidade de controlar o acesso e manter a segurança das informações,
+                permitindo que cada usuário desempenhe sua função de maneira eficiente e segura.</p>
+        </div>
 
-    <div class="row d-flex justify-content-between">
-        <!-- Atualizar Grupos -->
-        <div class="col-md-6 card-container">
-            <div class="card">
-                <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0">Atualizar Grupos</h5>
-                </div>
-                <div class="card-body">
-                    <form method="post">
-                        {% csrf_token %}
-                        <div class="mb-3">
-                            <label for="user_id" class="form-label">Selecione um Usuário:</label>
-                            <select id="user_id" name="user_id" class="form-select">
-                                {% for user in users %}
-                                    <option value="{{ user.id }}">{{ user.username }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="group_name" class="form-label">Selecione um Grupo:</label>
-                            <select id="group_name" name="group_name" class="form-select">
-                                <option value="Medico">Médico</option>
-                                <option value="Admin">Admin</option>
-                                <option value="Paciente">Paciente</option>
-                                <option value="Remover">Remover</option>
-                            </select>
-                        </div>
-                        <div class="d-flex justify-content-between">
-                            <button type="submit" class="btn btn-success">Atualizar Grupo</button>
-                            <button type="reset" class="btn btn-secondary">Limpar</button>
-                        </div>
-                    </form>
-                </div>
+        <div class="row mb-4">
+            <div class="col-lg-6">
+                <h3>Atualizar Grupos</h3>
+                <form method="post">
+                
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="user_id">Selecione um Usuário:</label>
+                        <select id="user_id" name="user_id" class="form-control select2" style="width: 100%">
+                            {% for user in users %}
+                                <option value="{{ user.id }}">{{ user.username }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="group_name">Selecione um Grupo:</label>
+                        <select id="group_name" name="group_name" class="form-control">
+                            <option value="Medico">Médico</option>
+                            <option value="Admin">Admin</option>
+                            <option value="Paciente">Paciente</option>
+                            <option value="Remover">Remover</option>
+                        </select>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <button type="submit" class="btn btn-success">Atualizar Grupo</button>
+                        <button type="reset" class="btn btn-secondary">Limpar</button>
+                    </div>
+                </form>
             </div>
         </div>
 
-        <!-- Usuários e Grupos -->
-        <div class="col-md-6 card-container">
-            <div class="card">
-                <div class="card-header bg-info text-white">
-                    <h5 class="mb-0">Usuários e Grupos</h5>
-                </div>
-                <div class="card-body">
-                    <table class="table table-striped">
-                        <thead>
+        <!-- Tabela de Usuários e Grupos -->
+        <div class="row">
+            <div class="col-lg-12">
+                <h3>Usuários e Grupos</h3>
+                <table class="table table-bordered table-striped">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Usuário</th>
+                            <th>Grupos</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users %}
                             <tr>
-                                <th>Usuário</th>
-                                <th>Grupos</th>
+                                <td>{{ user.username }}</td>
+                                <td>
+                                    {% for group in user.groups.all %}
+                                        <span class="badge badge-secondary">{{ group.name }}</span>
+                                    {% endfor %}
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            {% for user in users %}
-                                <tr>
-                                    <td>{{ user.username }}</td>
-                                    <td>
-                                        {% for group in user.groups.all %}
-                                            <span class="badge bg-secondary" >{{ group.name }}</span>
-                                        {% endfor %}
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                
+                <div class="pagination">
+                    <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+                    <div class="btn-group">
+                        {% if page_obj.has_previous %}
+                            <a href="?page=1" class="btn btn-secondary">Primeira</a>
+                            <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-secondary">Anterior</a>
+                        {% endif %}
+                        {% if page_obj.has_next %}
+                            <a href="?page={{ page_obj.next_page_number }}" class="btn btn-secondary">Próxima</a>
+                            <a href="?page={{ page_obj.paginator.num_pages }}" class="btn btn-secondary">Última</a>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 {% endblock %}
+
 {% block js %}
-<!-- Link do jQuery via CDN -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<!-- Link do Bootstrap JS via CDN -->
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#user_id').select2({
+                placeholder: 'Selecione um usuário',
+                allowClear: true
+            });
+        });
+    </script>
 {% endblock %}
