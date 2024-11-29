@@ -7,6 +7,13 @@
 
 {% block conteudo %}
     <div class="container">
+        {% if messages %}
+        <div class="alert alert-danger">
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
         <h3> Lista de hospitais </h3>
         
         <hr>

@@ -13,8 +13,7 @@ from django.contrib.auth.models import User, Group
 from django.contrib.auth.decorators import user_passes_test
 from .models import Estatisticas , Notificacao
 
-def erro_acesso(request):
-    return render(request, 'erro_acesso.html', {'mensagem': 'Você não tem permissão para modificar esse objeto.'})
+
 class MarcarComoLidaView(View):
     def post(self, request, notificacao_id):
         try:
@@ -204,7 +203,10 @@ class HospitalUpdate(GroupRequiredMixin, UpdateView):
     def get_object(self, query=None):
         self.object = Hospital.objects.get(pk=self.kwargs['pk'], usuario=self.request.user)
         return self.object
-    
+        if consulta.usuario != request.user:
+            messages.error(request, "Você não tem permissão para editar essa consulta.")
+            return redirect('listar-hopital')
+        
 
 class MedicoUpdate(GroupRequiredMixin, UpdateView):
     group_required = u"Admin"
@@ -260,8 +262,8 @@ class TriagemUpdate(GroupRequiredMixin, UpdateView):
         return context
 
 
-class HospitalDelete(GroupRequiredMixin, DeleteView):
-    group_required = u"Admin"
+class HospitalDelete( DeleteView):
+   
     login_url = reverse_lazy('login')
     model = Hospital
     template_name = 'form-excluir.html'
@@ -270,7 +272,10 @@ class HospitalDelete(GroupRequiredMixin, DeleteView):
     def get_object(self, query=None):
         self.object = Hospital.objects.get(pk=self.kwargs['pk'], usuario=self.request.user)
         return self.object
-
+        if consulta.usuario != request.user:
+            messages.error(request, "Você não tem permissão para editar essa consulta.")
+            return redirect('listar-hopital')
+    
 
 class MedicoDelete(GroupRequiredMixin, DeleteView):
     group_required = u"Admin"
@@ -314,8 +319,8 @@ class TriagemDelete(GroupRequiredMixin, DeleteView):
 
 
 # List
-class HospitalList(GroupRequiredMixin, ListView):
-    group_required = u'Admin'
+class HospitalList( ListView):
+   
     login_url = reverse_lazy('login')
     model = Hospital
     template_name = 'listas/hospital.html'
