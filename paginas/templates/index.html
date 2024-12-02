@@ -1,23 +1,23 @@
 {% extends 'modelo.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="{% static 'fotos/PROJETO.ico' %}" type="image/x-icon">
-    {% block titulo %}
-    <title>Dashboard Hospitalar</title>
-    {% endblock %}
-  
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
-    <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link href="{% static 'css/sb-admin-2.css' %}" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
-    <link rel="stylesheet" href="{% static 'css/meu.css' %}">
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" href="{% static 'fotos/PROJETO.ico' %}" type="image/x-icon">
+        {% block titulo %}
+        <title>Dashboard Hospitalar</title>
+        {% endblock %}
+      
+        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+        <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
+        <link href="{% static 'css/sb-admin-2.css' %}" rel="stylesheet">
+        <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+        <link rel="stylesheet" href="{% static 'css/meu.css' %}">
+        
+        <!-- Incluindo o Chart.js uma vez -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    </head>
 <body>
     <div id="wrapper">
         {% include 'includes/sidebar.html' %}
@@ -93,23 +93,28 @@
                     </div>
                 </div>
 
+              
                 <!-- Gráfico de Atendimentos -->
                 <h4>Atendimentos Realizados ao Longo do Tempo</h4>
                 <canvas id="myChart" width="400" height="200"></canvas>
+
                 <script>
-                    var ctx = document.getElementById('myChart').getContext('2d');
-                    var myChart = new Chart(ctx, {
-                        type: 'line',
-                        data: {
-                            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
-                            datasets: [{
-                                label: 'Atendimentos Realizados',
-                                data: [12, 19, 3, 5, 2, 3, 8],
-                                borderColor: 'rgba(75, 192, 192, 1)',
-                                tension: 0.1
-                            }]
-                        }
-                    });
+                    // Aguardar o carregamento completo do conteúdo antes de configurar o gráfico
+                    window.onload = function() {
+                        var ctx = document.getElementById('myChart').getContext('2d');
+                        var myChart = new Chart(ctx, {
+                            type: 'line',
+                            data: {
+                                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+                                datasets: [{
+                                    label: 'Atendimentos Realizados',
+                                    data: [12, 19, 3, 5, 2, 3, 8],  // Dados de exemplo, substitua conforme necessário
+                                    borderColor: 'rgba(75, 192, 192, 1)',
+                                    tension: 0.1
+                                }]
+                            }
+                        });
+                    };
                 </script>
 
                 <h4>Pesquisar </h4>
@@ -117,7 +122,7 @@
                     <input type="text" name="nome" class="form-control mb-3" placeholder="Pesquisar Paciente..." value="{{ request.GET.search }}">
                     <button type="submit" class="btn btn-primary">Pesquisar</button>
                 </form>
-               <div class="container">
+               <!-- <div class="container">
                 <h4>Últimos Pacientes Atendidos</h4>
                 <div class="table-responsive">
                     <table class="table table-bordered">
@@ -143,7 +148,7 @@
                         </tbody>
                     </table>
                 </div>
-              </div>
+              </div> -->
             </div>
             {% endblock %}
         </div>
@@ -190,6 +195,9 @@
         <script src="{% static 'js/script.js' %}"></script>
         <script src="{% static 'js/meu.js' %}"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
+        <!-- Adicionar o link para o Chart.js -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
         {% endblock %}
 </body>
 </html>
