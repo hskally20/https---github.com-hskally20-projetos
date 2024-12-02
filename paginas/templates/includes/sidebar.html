@@ -55,10 +55,11 @@
                         <a class="dropdown-item" href="{% url 'cadastrar-triagem' %}">Cadastrar Triagem</a>
                         <a class="dropdown-item" href="{% url 'cadastrar-medico' %}">Cadastrar Médico</a>
                     {% elif group.name == 'Paciente' %}
-                        <a class="dropdown-item" href="{% url 'cadastrar-paciente' %}">Cadastrar Pacientes</a>
+                    <a class="dropdown-item" href="{% url 'cadastrar-consulta' %}">Agenda Consulta</a>    
+                    <a class="dropdown-item" href="{% url 'cadastrar-paciente' %}">Cadastrar Pacientes</a>
                     {% endif %}
                 {% endfor %}
-                <a class="dropdown-item" href="{% url 'cadastrar-consulta' %}">Agenda Consulta</a>
+            
             </div>
         </div>
     </li>

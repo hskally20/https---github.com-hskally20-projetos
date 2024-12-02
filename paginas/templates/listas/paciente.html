@@ -26,6 +26,7 @@
                     <th>Nome</th>
                     <th>Comun / Preferencial</th>
                     <th>Idade</th>
+                    <th>Opções</th>
                     {% for group in request.user.groups.all %}
                         {% if group.name == 'Medico' or group.name == 'Admin' %}
                             <th>Sintomas</th>
@@ -33,7 +34,6 @@
                             <th>número do sus</th>
                             <th>telefone</th>
                             <th>doença crônica</th>
-                            <th>Opções</th>
                             <th>Ver prontuário</th>
                         {% endif %}
                     {% endfor %}
@@ -44,6 +44,10 @@
                         <td>{{ paciente.nome }}</td>
                         <td>{{ paciente.descricao }}</td>
                         <td>{{ paciente.idade }}</td>
+                        <td>
+                            <a href="{% url 'editar-paciente' paciente.pk %}" class="btn btn-warning btn-sm" title="Editar">Editar</a>
+                            <a href="{% url 'excluir-paciente' paciente.pk %}" class="btn btn-danger btn-sm" title="Excluir">Excluir</a>
+                        </td>
                         
                         {% for group in request.user.groups.all %}
                             {% if group.name == 'Medico' or group.name == 'Admin' %}
@@ -53,10 +57,7 @@
                                 <td>{{ paciente.telefone }}</td>
                                 <td>{{ paciente.doença_cronica }}</td>
 
-                                <td>
-                                    <a href="{% url 'editar-paciente' paciente.pk %}" class="btn btn-warning btn-sm" title="Editar">Editar</a>
-                                    <a href="{% url 'excluir-paciente' paciente.pk %}" class="btn btn-danger btn-sm" title="Excluir">Excluir</a>
-                                </td>
+                              
                                 <td>
                                     <a href="{% url 'prontuario' paciente.pk %}" class="btn btn-primary btn-sm" title="Ver Prontuário">Prontuário</a>
                                 </td>
