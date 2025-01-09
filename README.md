@@ -1,5 +1,5 @@
 # Meu Repositório
 
-Este é o meu projeto no GitHub.
+Este é nosso projeto de pesquisa o sistema hospitalar virtual touch.
 
 Confira o site: [virtualtouch](https://virtual-touch.onrender.com/)
