@@ -11,8 +11,33 @@ from django.views import View
 import json
 from django.contrib.auth.models import User, Group
 from django.contrib.auth.decorators import user_passes_test
+from .models import Estatisticas , Notificacao
 
-# Check if the user is an admin
+
+class MarcarComoLidaView(View):
+    def post(self, request, notificacao_id):
+        try:
+            notificacao = Notificacao.objects.get(id=notificacao_id)
+            notificacao.status = "lida"
+            notificacao.save()
+            return JsonResponse({'status': 'success'}, status=200)
+        except Notificacao.DoesNotExist:
+            return JsonResponse({'error': 'Notificação não encontrada'}, status=404)
+
+
+class NotificacaoDeleteView(LoginRequiredMixin, DeleteView):
+    model = Notificacao
+    template_name = 'form-excluir.html'
+    success_url = reverse_lazy('Listar-notificacao')
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.delete()
+        if request.is_ajax():
+            return JsonResponse({'success': True})
+        return super().delete(request, *args, **kwargs)
+
+
 def admin_required(user):
     return user.is_superuser
 
@@ -65,9 +90,6 @@ class ChamarPacienteView(LoginRequiredMixin, View):
                     paciente = Paciente.objects.get(id=paciente_id)
                 except Paciente.DoesNotExist:
                     return JsonResponse({"success": False, "message": "Paciente não encontrado."})
-
-                if paciente.usuario_cadastrador == request.user : 
-                    return JsonResponse({"success": False, "message": "Você não tem permissão para chamar esse paciente."})
 
                 mensagem = f'O médico está chamando o paciente {paciente.nome}.'
 
@@ -181,14 +203,17 @@ class HospitalUpdate(GroupRequiredMixin, UpdateView):
     def get_object(self, query=None):
         self.object = Hospital.objects.get(pk=self.kwargs['pk'], usuario=self.request.user)
         return self.object
-
+        if consulta.usuario != request.user:
+            messages.error(request, "Você não tem permissão para editar essa consulta.")
+            return redirect('listar-hopital')
+        
 
 class MedicoUpdate(GroupRequiredMixin, UpdateView):
     group_required = u"Admin"
     model = Medico
     fields = ['numero', 'nome', 'cpf', 'especificacao', 'hospital']
     template_name = 'form.html'
-    success_url = reverse_lazy('inicio')
+    success_url = reverse_lazy('listar-medico')
 
     def get_object(self, query=None):
         self.object = Medico.objects.get(pk=self.kwargs['pk'], usuario=self.request.user)
@@ -224,7 +249,7 @@ class TriagemUpdate(GroupRequiredMixin, UpdateView):
     model = Triagem
     fields = ['paciente', 'data', 'medico', 'hospital', 'horario', 'pressao', 'temperatura', 'peso', 'glicose']
     template_name = 'form.html'
-    success_url = reverse_lazy('listar-triagem')
+    success_url = reverse_lazy('Listar-triagem')
 
     def get_object(self, query=None):
         self.object = Triagem.objects.get(pk=self.kwargs['pk'], usuario=self.request.user)
@@ -237,8 +262,8 @@ class TriagemUpdate(GroupRequiredMixin, UpdateView):
         return context
 
 
-class HospitalDelete(GroupRequiredMixin, DeleteView):
-    group_required = u"Admin"
+class HospitalDelete( DeleteView):
+   
     login_url = reverse_lazy('login')
     model = Hospital
     template_name = 'form-excluir.html'
@@ -247,13 +272,16 @@ class HospitalDelete(GroupRequiredMixin, DeleteView):
     def get_object(self, query=None):
         self.object = Hospital.objects.get(pk=self.kwargs['pk'], usuario=self.request.user)
         return self.object
-
+        if consulta.usuario != request.user:
+            messages.error(request, "Você não tem permissão para editar essa consulta.")
+            return redirect('listar-hopital')
+    
 
 class MedicoDelete(GroupRequiredMixin, DeleteView):
     group_required = u"Admin"
     model = Medico
     template_name = 'form-excluir.html'
-    success_url = reverse_lazy('inicio')
+    success_url = reverse_lazy('listar-medico')
 
     def get_object(self, query=None):
         self.object = Medico.objects.get(pk=self.kwargs['pk'], usuario=self.request.user)
@@ -269,6 +297,7 @@ class PacienteDelete(GroupRequiredMixin, DeleteView):
     def get_object(self, query=None):
         self.object = Paciente.objects.get(pk=self.kwargs['pk'], usuario=self.request.user)
         return self.object
+        
 
 
 class TriagemDelete(GroupRequiredMixin, DeleteView):
@@ -290,8 +319,8 @@ class TriagemDelete(GroupRequiredMixin, DeleteView):
 
 
 # List
-class HospitalList(GroupRequiredMixin, ListView):
-    group_required = u'Admin'
+class HospitalList( ListView):
+   
     login_url = reverse_lazy('login')
     model = Hospital
     template_name = 'listas/hospital.html'
@@ -410,7 +439,7 @@ class CronogramaCreate(GroupRequiredMixin, CreateView):
     group_required = u"Medico"
     login_url = reverse_lazy('login')
     model = Cronograma
-    fields = ['nome', 'data', 'medico', 'hospital', 'horario']
+    fields = ['nome', 'data', 'medico', 'hospital', 'horario',]
     template_name = 'form.html'
     success_url = reverse_lazy('Listar-cronograma')
 
@@ -439,7 +468,7 @@ class CronogramaUpdate(GroupRequiredMixin, UpdateView):
     group_required = u"Medico"
     login_url = reverse_lazy('login')
     model = Cronograma
-    fields = ['paciente', 'data', 'medico', 'hospital', 'horario', 'pressao']
+    fields = [ 'data', 'medico', 'hospital', 'horario']
     template_name = 'form.html'
     success_url = reverse_lazy('Listar-cronograma')
 
@@ -493,7 +522,7 @@ class ConsultaDelete(DeleteView):
 
 class ConsultaUpdate(UpdateView):
     model = Consulta
-    fields = ['paciente', 'data', 'medico', 'hospital', 'horario']
+    fields = ['paciente', 'data', 'medico', 'hospital', ]
     template_name = 'form.html'
     success_url = reverse_lazy('Listar-consulta')
 
@@ -538,7 +567,13 @@ class ConsultaList(ListView):
             index = (i + 1) * 1 + i 
             lista_consultas_ordenada.insert(index, consulta_preferencial)
 
+        nome = self.request.GET.get('nome')  # Obtém o nome do paciente da requisição GET
+        if nome:
+            # Aplica o filtro de nome para as consultas
+            lista_consultas_ordenada = [consulta for consulta in lista_consultas_ordenada if nome.lower() in consulta.paciente.nome.lower()]
+
         return lista_consultas_ordenada
+
 
 
 class ComentarioCreate(CreateView):
@@ -558,10 +593,10 @@ class AtendimentoCreate(GroupRequiredMixin, CreateView):
     group_required = u'Medico'
     login_url = reverse_lazy('login')
     model = Atendimento
-    fields = ['remedio', 'diagnostico', 'recomendacoes','paciente','usuario']
+    fields = ['remedio', 'diagnostico', 'recomendacoes','paciente','medico','usuario']
     template_name = 'form2.html'
     success_url = reverse_lazy('listar-atendimentos')
-
+     
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
         context['Titulo'] = 'Criar Atendimento'
@@ -588,6 +623,7 @@ class AtendimentoCreate(GroupRequiredMixin, CreateView):
         paciente = get_object_or_404(Paciente, id=paciente_pk)
         form.instance.paciente = paciente
         return super().form_valid(form)
+       
 
     
 class ConsultaDetailView(DetailView):
@@ -612,12 +648,12 @@ class AtendimentoUpdate(GroupRequiredMixin, UpdateView):
     model = Atendimento
     fields = ['remedio', 'diagnostico', 'recomendacoes']
     template_name = 'form2.html'
-    success_url = reverse_lazy('Listar-atendimento')
+    success_url = reverse_lazy('listar-atendimentos')
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
         context['Titulo'] = 'Atualizar Atendimento'
-        return context
+        return context  
 
     def form_valid(self, form):
         form.instance.usuario = self.request.user
@@ -628,14 +664,47 @@ class AtendimentoDelete(GroupRequiredMixin , DeleteView):
     login_url = reverse_lazy('login')
     model = Atendimento
     template_name = 'form-excluir.html'
-    success_url = reverse_lazy('Listar-atendimento')
+    success_url = reverse_lazy('listar-atendimentos')
 class AtendimentoList(GroupRequiredMixin, ListView):
     group_required = u'Medico'
     model = Atendimento
-    template_name = 'listas/atendimentos.html'
+    template_name = 'listas/atendimento.html'
     paginate_by = 5
+    def get_queryset(self):
+        nome = self.request.GET.get('paciente')  # Obtém o nome do paciente da requisição GET
+        if nome:
+            # Filtra os atendimentos onde o nome do paciente contém o termo pesquisado
+            atendimentos = Atendimento.objects.filter(paciente__nome__icontains=nome)
+        else:
+            atendimentos = Atendimento.objects.all()  # Retorna todos os atendimentos se não houver pesquisa
+        return atendimentos
+
 
 class ComentarioList(ListView):
     model = Comentario
     template_name = 'listas/comentario.html'
     paginate_by = 5
+    def get_queryset(self):
+        nome = self.request.GET.get('nome')
+        if nome:
+            comentario = Comentario.objects.filter(comentario__icontains=nome)
+        else:
+            comentario = Comentario.objects.all()
+        return comentario
+def prontuario_view(request, paciente_id):
+    try:
+        paciente = Paciente.objects.get(id=paciente_id)
+    except Paciente.DoesNotExist:
+        raise Http404("Paciente não encontrado")
+    
+    consultas = Consulta.objects.filter(paciente=paciente)
+    triagens = Triagem.objects.filter(paciente=paciente)
+    atendimentos = Atendimento.objects.filter(paciente=paciente)
+
+    context = {
+        'paciente': paciente,
+        'consultas': consultas,
+        'triagens': triagens,
+        'atendimentos': atendimentos,
+    }
+    return render(request, 'prontuario.html', context)

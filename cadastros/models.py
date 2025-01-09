@@ -48,10 +48,9 @@ class Cronograma(models.Model):
     data= models.DateField(verbose_name='data', max_length = 10)
     medico = models.ForeignKey (Medico, on_delete=models.PROTECT)
     hospital = models.ForeignKey(Hospital, on_delete=models.PROTECT)
-    horario= models.CharField( verbose_name="orario" , max_length=15 )
-    
+    horario= models.CharField( verbose_name="horario" , max_length=15 ) 
     def __str__(self):
-        return "{} ({})".format(self.nome, self.orario)
+        return "{} ({})".format(self.nome, self.horario)
 
     
 class Consulta(models.Model):
@@ -64,7 +63,7 @@ class Consulta(models.Model):
     status = models.CharField( verbose_name ='status' ,max_length=20,  null =True ,blank = True )
     
     def __str__(self):
-        return "{} ({})".format(self.nome, self.data)
+        return "{} ({})".format(self.nome, self.paciente.nome)
 class Comentario(models.Model):
        nota = models.IntegerField (verbose_name='nota')
        sugestoes = models.TextField( verbose_name ='sugestoes', max_length=255 )
@@ -90,6 +89,7 @@ class Notificacao(models.Model):
     paciente = models.ForeignKey(User, on_delete=models.CASCADE)
     mensagem = models.CharField(max_length=255)
     data = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=255)
     def __str__(self):
       return self.mensagem
 class Atendimento(models.Model):
@@ -100,5 +100,14 @@ class Atendimento(models.Model):
     diagnostico = models.TextField(verbose_name='diagnostico' , max_length=255)
     recomendacoes = models.TextField(verbose_name = 'recomendacoes', max_length=255 ,null=True, blank=True)
     def __str__(self):
-      def __str__(self):
-        return f'Prontuário de {self.usuario.username}' 
+        return f'Atendimento de {self.paciente} - {self.medico}'
+
+
+
+class Estatisticas(models.Model):
+    consultas_agendadas = models.IntegerField(default=0)
+    atendimentos_realizados = models.IntegerField(default=0)
+    pacientes_espera = models.IntegerField(default=0)
+    notificacoes_pendentes = models.IntegerField(default=0)
+    
+  

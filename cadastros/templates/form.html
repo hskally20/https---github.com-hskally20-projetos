@@ -7,19 +7,23 @@
 {% endblock %}
 
 {% block conteudo %}
-<div class="container">
-    <h3>{{Titulo}}</h3>
-    <h5>{{conteudo}}</h5>
-    <p class="lead"> Preencha todos os campos obrigatórios. </p>
+<div class="container mt-5">
+    <h3 class="text-center">{{Titulo}}</h3>
+    <h5 class="text-center">{{conteudo}}</h5>
+    <p class="lead text-center">Preencha todos os campos obrigatórios.</p>
 
     <hr>
 
     <form action="" method="post" class="form-control-lg">
         {% csrf_token %}
 
-        {{ form.as_p }}
+        <div class="form-group">
+            {{ form.as_p }}
+        </div>
 
-        <button type="submit" class="btn btn-primary"> Cadastrar </button>
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary btn-lg">Cadastrar</button>
+        </div>
     </form>
 </div>
 {% endblock %}

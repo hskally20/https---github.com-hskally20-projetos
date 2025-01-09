@@ -1,39 +1,64 @@
-{% extends 'modelo.html' %}  <!-- Herda a estrutura básica do seu modelo -->
+{% extends 'modelo.html' %}
+{% load static %}
 
 {% block titulo %}
     <title>Notificações</title>
 {% endblock %}
 
 {% block conteudo %}
-    <div class="container">
-        <h3>Minhas Notificações</h3>
-        
-        <!-- Verifica se há notificações -->
-        {% if not notificacoes %}
-            <p>Você não tem notificações no momento.</p>
-        {% else %}
-            <div class="table-responsive">
-                <table class="table table-light">
-                    <thead>
-                        <tr>
-                            <th>Mensagem</th>
-                            <th>Data</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for notificacao in notificacoes %}
-                            <tr class="table-success">
-                                <td>{{ notificacao.mensagem }}</td>
-                                <td>{{ notificacao.data|date:"d/m/Y H:i" }}</td>
-                            </tr>
-                        {% empty %}
-                            <tr>
-                                <td colspan="2">Nenhuma notificação encontrada.</td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+<div class="container">
+    <h3>Notificações</h3>
+    <hr>
+
+    <!-- Formulário de busca -->
+    <form action="?" method="GET" class="mb-3">
+        <input type="text" name="busca" class="p-1 border" value="{{ busca }}" placeholder="Buscar notificações">
+        <button type="submit" class="btn btn-success">Buscar</button>
+        <a href="{% url 'Listar-notificacao' %}" class="btn btn-secondary">Limpar</a>
+    </form>
+
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Mensagem</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for notificacao in notificacoes %}
+                    <tr id="notificacao_{{ notificacao.id }}">
+                        <td>{{ notificacao.mensagem }}</td>
+                        <td id="status_{{ notificacao.id }}">{{ notificacao.status }}</td>
+                        <td>
+                            <button class="btn btn-success btn-sm" data-id="{{ notificacao.id }}">Marcar como Lida</button>
+                            <a href="{% url 'deletar-notificacao' notificacao.pk %}" class="btn btn-danger btn-sm" title="Excluir"> Excluir </a>
+                        </td>
+                       
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="4">Nenhuma notificação encontrada.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="text-center">
+        {% if notificacoes.has_previous %}
+            <a href="?page={{ notificacoes.previous_page_number }}" class="btn btn-light">Voltar</a>
+        {% endif %}
+
+        <span>Página {{ notificacoes.number }} de {{ notificacoes.paginator.num_pages }}</span>
+
+        {% if notificacoes.has_next %}
+            <a href="?page={{ notificacoes.next_page_number }}" class="btn btn-light">Próxima</a>
         {% endif %}
     </div>
+</div>
 {% endblock %}
+
+
+

@@ -8,6 +8,7 @@ body {
 .container {
     margin-top: 20px;
     padding: 20px;
+    text-align: center;
 }
 
 .carousel-section {
@@ -77,4 +78,16 @@ body {
 }
 .badge bg-secondary{
     background-color: #ffffff;
+}
+
+
+.dados-paciente {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.dados-paciente .info {
+    width: 48%;
 }

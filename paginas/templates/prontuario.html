@@ -1,0 +1,127 @@
+<!-- prontuario.html -->
+{% extends 'modelo.html' %}
+{% load static %}
+
+{% block titulo %}
+    <title>Prontuário - {{ paciente.nome }}</title>
+{% endblock %}
+
+{% block conteudo %}
+    <div class="container mt-5">
+        <h2>Prontuário do Paciente: {{ paciente.nome }}</h2>
+        
+        <h4>Dados do Paciente</h4>
+        <table class="table table-striped">
+            <tbody>
+                <tr>
+                    <th>Idade</th>
+                    <td>{{ paciente.idade }}</td>
+                </tr>
+                <tr>
+                    <th>Telefone</th>
+                    <td>{{ paciente.telefone }}</td>
+                </tr>
+                <tr>
+                    <th>Número SUS</th>
+                    <td>{{ paciente.numero_sus }}</td>
+                </tr>
+                <tr>
+                    <th>CPF</th>
+                    <td>{{ paciente.cpf }}</td>
+                </tr>
+                <tr>
+                    <th>Descrição</th>
+                    <td>{{ paciente.descricao }}</td>
+                </tr>
+                <tr>
+                    <th>Sintomas</th>
+                    <td>{{ paciente.sintomas }}</td>
+                </tr>
+                <tr>
+                    <th>Doença Crônica</th>
+                    <td>{{ paciente.doença_cronica }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h4>Consultas</h4>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Médico</th>
+                    <th>Hospital</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for consulta in consultas %}
+                <tr>
+                    <td>{{ consulta.data }}</td>
+                    <td>{{ consulta.medico.nome }}</td>
+                    <td>{{ consulta.hospital.nome }}</td>
+                    <td>{{ consulta.status }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4">Nenhuma consulta registrada.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <h4>Triagens</h4>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Médico</th>
+                    <th>Pressão</th>
+                    <th>Temperatura</th>
+                    <th>Peso</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for triagem in triagens %}
+                <tr>
+                    <td>{{ triagem.data }}</td>
+                    <td>{{ triagem.medico.nome }}</td>
+                    <td>{{ triagem.pressao }}</td>
+                    <td>{{ triagem.temperatura }}</td>
+                    <td>{{ triagem.peso }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5">Nenhuma triagem registrada.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <h4>Atendimentos</h4>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Médico</th>
+                    <th>Remédio</th>
+                    <th>Diagnóstico</th>
+                    <th>Recomendações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for atendimento in atendimentos %}
+                <tr>
+                    <td>{{ atendimento.medico.nome }}</td>
+                    <td>{{ atendimento.remedio }}</td>
+                    <td>{{ atendimento.diagnostico }}</td>
+                    <td>{{ atendimento.recomendacoes }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4">Nenhum atendimento registrado.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

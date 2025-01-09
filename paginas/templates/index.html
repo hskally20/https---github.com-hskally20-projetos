@@ -1,51 +1,204 @@
 {% extends 'modelo.html' %}
 {% load static %}
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" href="{% static 'fotos/PROJETO.ico' %}" type="image/x-icon">
+        {% block titulo %}
+        <title>Dashboard Hospitalar</title>
+        {% endblock %}
+      
+        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+        <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
+        <link href="{% static 'css/sb-admin-2.css' %}" rel="stylesheet">
+        <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+        <link rel="stylesheet" href="{% static 'css/meu.css' %}">
+        
+        <!-- Incluindo o Chart.js uma vez -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    </head>
+<body>
+    <div id="wrapper">
+        {% include 'includes/sidebar.html' %}
+        <h4>Pesquisar </h4>
+        <form method="get" action="{% url 'Listar-paciente' %}">
+            <input type="text" name="nome" class="form-control mb-3" placeholder="Pesquisar Paciente..." value="{{ request.GET.search }}">
+            <button type="submit" class="btn btn-primary">Pesquisar</button>
+        </form>
+        <div class="container">
+            {% block conteudo %}
+            <div class="container-fluid">
+                <!-- Dashboard de Visão Geral -->
+                <h3 class="mt-4">Visão Geral do Hospital</h3>
+                <div class="row">
+                    <!-- Cards de Informação Rápida -->
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="card border-left-primary shadow h-100 py-2">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1"><a href="{% url 'Listar-consulta' %}">Consultas Agendadas</a></div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800"><p>{{ consultas_agendadas }}</p></div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fas fa-calendar-check fa-2x text-gray-300"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-{% block titulo %}
-<title>Página Inicial</title>
-{% endblock %}
-{% block conteudo %}
-<div class="container">
-    <h1>Seja Bem-vindo</h1>
-</div>
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="card border-left-success shadow h-100 py-2">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1"> <a href="{% url 'listar-atendimentos' %}"> Atendimentos Realizados</a></div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ atendimentos_realizados }}</div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fas fa-user-md fa-2x text-gray-300"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-<div class="carousel-section">
-    <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
-      <div class="carousel-inner">
-        <div class="carousel-item active">
-          <img class="d-block w-100" src="{% static 'fotos/f1.jpg' %}" alt="f1" width="100">
-        </div>
-        <div class="carousel-item">
-          <img class="d-block w-100" src="{% static 'fotos/f2.jfif' %}" alt="f2" width="100">
-        </div>
-        <div class="carousel-item">
-          <img class="d-block w-100" src="{% static 'fotos/f4.jpg' %}" alt="f3" width="100">
-        </div>
-        <div class="carousel-item">
-          <img class="d-block w-100" src="{% static 'fotos/f3.jpg' %}" alt="f4" width="100">
-        </div>
-      </div>
-      <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="sr-only">Anterior</span>
-      </a>
-      <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="sr-only">Próximo</span>
-      </a>
-    </div>
-</div>
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="card border-left-warning shadow h-100 py-2">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1"> <a href="{% url 'Listar-consulta' %}">Pacientes em Espera</a></div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ pacientes }}</div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fas fa-procedures fa-2x text-gray-300"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-<div class="card-section">
-    <div class="container">
-        <div class="row">
-            <div class="card gree">
-                <h2><a href="{% url 'cadastrar-consulta' %}">Cadastro de Consulta</a></h2>
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="card border-left-danger shadow h-100 py-2">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div  class="text-xs font-weight-bold text-danger text-uppercase mb-1"> <a href="{% url 'Listar-notificacao' %}">Notificações Pendentes</a></div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ notificacoes }}</div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fas fa-bell fa-2x text-gray-300"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+              
+                <!-- Gráfico de Atendimentos -->
+                <h4>Atendimentos Realizados ao Longo do Tempo</h4>
+                <canvas id="myChart" width="400" height="200"></canvas>
+
+                <script>
+                    // Aguardar o carregamento completo do conteúdo antes de configurar o gráfico
+                    window.onload = function() {
+                        var ctx = document.getElementById('myChart').getContext('2d');
+                        var myChart = new Chart(ctx, {
+                            type: 'line',
+                            data: {
+                                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+                                datasets: [{
+                                    label: 'Atendimentos Realizados',
+                                    data: [12, 19, 3, 5, 2, 3, 8],  // Dados de exemplo, substitua conforme necessário
+                                    borderColor: 'rgba(75, 192, 192, 1)',
+                                    tension: 0.1
+                                }]
+                            }
+                        });
+                    };
+                </script>
+
             </div>
-            <div class="card gree">
-                <h2><a href="{% url 'Listar-cronograma' %}">Cronograma</a></h2>
+               <!-- <div class="container">
+                <h4>Últimos Pacientes Atendidos</h4>
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nome do Paciente</th>
+                                <th>Médico Responsável</th>
+                                <th>Status</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="patient-table-body">
+                            {% for consulta in consultas %}
+                                <tr>
+                                    <td>{{ consulta.id }}</td>
+                                    <td>{{ consulta.paciente.nome }}</td>
+                                    <td>{{ consulta.medico.nome }}</td>
+                                    <td>Concluído</td>
+                                    <td><button class="btn btn-primary">Detalhes</button></td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+              </div> -->
             </div>
+            {% endblock %}
         </div>
     </div>
-</div>
-{% endblock %}
+
+    
+    
+
+    {% block scripts %}
+    <script>
+        document.getElementById('search').addEventListener('input', function(e) {
+            let searchQuery = e.target.value.toLowerCase();
+            let rows = document.querySelectorAll('#patient-table-body tr');
+            
+            rows.forEach(function(row) {
+                let name = row.cells[1].textContent.toLowerCase();
+                if (name.includes(searchQuery)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+        
+        document.getElementById("search").addEventListener("input", function() {
+            const query = this.value.toLowerCase();
+            const rows = document.querySelectorAll("#patient-table-body tr");
+            rows.forEach(row => {
+                const patientName = row.cells[1].textContent.toLowerCase();
+                if (patientName.includes(query)) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+        });
+
+   </script>
+        <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+        <script src="{% static 'js/sb-admin-2.min.js' %}"></script>
+        <script src="{% static 'js/jquery-3.2.1.slim.min.js' %}"></script>
+        <script src="{% static 'js/popper.min.js' %}"></script>
+        <script src="{% static 'js/bootstrap.min.js' %}"></script>
+        <script src="{% static 'js/script.js' %}"></script>
+        <script src="{% static 'js/meu.js' %}"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
+        <!-- Adicionar o link para o Chart.js -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+        {% endblock %}
+</body>
+</html>
