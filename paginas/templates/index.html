@@ -21,7 +21,12 @@
 <body>
     <div id="wrapper">
         {% include 'includes/sidebar.html' %}
-     
+        <h4>Pesquisar </h4>
+        <form method="get" action="{% url 'Listar-paciente' %}">
+            <input type="text" name="nome" class="form-control mb-3" placeholder="Pesquisar Paciente..." value="{{ request.GET.search }}">
+            <button type="submit" class="btn btn-primary">Pesquisar</button>
+        </form>
+        <div class="container">
             {% block conteudo %}
             <div class="container-fluid">
                 <!-- Dashboard de Visão Geral -->
@@ -117,11 +122,7 @@
                     };
                 </script>
 
-                <h4>Pesquisar </h4>
-                <form method="get" action="{% url 'Listar-paciente' %}">
-                    <input type="text" name="nome" class="form-control mb-3" placeholder="Pesquisar Paciente..." value="{{ request.GET.search }}">
-                    <button type="submit" class="btn btn-primary">Pesquisar</button>
-                </form>
+            </div>
                <!-- <div class="container">
                 <h4>Últimos Pacientes Atendidos</h4>
                 <div class="table-responsive">
